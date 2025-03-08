@@ -902,7 +902,7 @@ MonoBehaviour:
       Offset: {x: 0, y: 0}
   CenterOnActivate: 1
   TargetOffset: {x: 0, y: 0, z: 0}
-  Damping: {x: 0.5, y: 0.5}
+  Damping: {x: 5, y: 2}
   Lookahead:
     Enabled: 0
     Time: 0
@@ -1023,11 +1023,11 @@ Transform:
   m_GameObject: {fileID: 1169812933}
   serializedVersion: 2
   m_LocalRotation: {x: 0.25340134, y: 0.00000015585857, z: -0.000000040827327, w: 0.9673613}
-  m_LocalPosition: {x: 0.12, y: 3.25, z: -7.3599997}
+  m_LocalPosition: {x: -0.82000005, y: 1.76, z: -1.1799994}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1456582221}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1200276220
 GameObject:
@@ -1090,6 +1090,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 330585546}
+  - {fileID: 1169812939}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1722677729
@@ -1351,9 +1352,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
 --- !u!4 &1837705909
 Transform:
   m_ObjectHideFlags: 0
@@ -1537,4 +1538,3 @@ SceneRoots:
   - {fileID: 907061246}
   - {fileID: 1778545048}
   - {fileID: 1837705909}
-  - {fileID: 1169812939}
