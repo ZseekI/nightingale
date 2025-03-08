@@ -1,22 +1,29 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float Speed = 10.0f;
+    public float moveSpeed;
+    PlayerInput playerInput;
+    InputAction moveAction;
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        playerInput = GetComponent<PlayerInput>();
+        moveAction = playerInput.actions.FindAction("Move");
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.Translate(Speed * Time.deltaTime * Vector3.forward);
-        }
+        MovePlayer();
+    }
+    void MovePlayer()
+    {
+        Vector2 direction = moveAction.ReadValue<Vector2>();
+        transform.position += new Vector3(direction.x, 0, direction.y) * moveSpeed * Time.deltaTime;
     }
 }
