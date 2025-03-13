@@ -3,7 +3,7 @@ using Unity.Cinemachine;
 
 public class ChannelMaskChanger : MonoBehaviour
 {
-    public CinemachineBrain brain;
+    private CinemachineBrain brain;
     public OutputChannels Output1;
     public OutputChannels Output2;
     // Set your new desired channel mask in the inspector, or modify this value in code.
@@ -38,10 +38,6 @@ public class ChannelMaskChanger : MonoBehaviour
                 brain.ChannelMask = Output1;
                 print(IsFirstChannel);
             }
-        }
-        
-        
-        
-        
+        }    
     }
 }

@@ -1,32 +1,23 @@
 using UnityEngine;
 
-public class CameraPosition : MonoBehaviour
+public class PlayerCamera : MonoBehaviour
 {
-    public float sensX;
-    public float sensY;
+    [Header("References")]
     public Transform orientation;
-    float xRotation;
-    float yRotation;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public Transform player;
+    public Transform playerMesh;
+    public Rigidbody rb;
+    public float rotationSpeed;
+    private void Update()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
+        Vector3 viewDir = player.position - new Vector3(transform.position.x, player.position.y, transform.position.z);
+        orientation.forward = viewDir.normalized;
 
-    // Update is called once per frame
-    void Update()
-    {
-        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+        Vector3 inputDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        yRotation += mouseX;
-        xRotation -= mouseY;
-
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
-        transform.rotation = Quaternion.Euler(xRotation,yRotation,0);
-        orientation.rotation = Quaternion.Euler(0,yRotation,0);
+        if(inputDir != Vector3.zero)
+            player.forward = Vector3.Slerp(playerMesh.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
     }
 }

@@ -3,27 +3,52 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed;
-    PlayerInput playerInput;
-    InputAction moveAction;
+    public float moveSpeed = 5f;
+    public Transform orientation; // Reference used to orient the movement
 
+    private Rigidbody rb;
+    private PlayerInput playerInput;
+    private InputAction moveAction;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
+
+        // Get the PlayerInput component and the "Move" action from the Input Action Asset
         playerInput = GetComponent<PlayerInput>();
-        moveAction = playerInput.actions.FindAction("Move");
+        moveAction = playerInput.actions["Move"];
     }
 
-    // Update is called once per frame
+    private void OnEnable()
+    {
+        moveAction.Enable();
+    }
+
+    private void OnDisable()
+    {
+        moveAction.Disable();
+    }
+
     private void Update()
     {
         MovePlayer();
     }
-    void MovePlayer()
+
+    private void MovePlayer()
     {
-        Vector2 direction = moveAction.ReadValue<Vector2>();
-        transform.position += new Vector3(direction.x, 0, direction.y) * moveSpeed * Time.deltaTime;
+        // Read input from the Move action (x for sideways, y for forward/backward)
+        Vector2 input = moveAction.ReadValue<Vector2>();
+
+        // Calculate the move direction relative to the orientation transform.
+        // For example, using the forward and right vectors from the orientation.
+        Vector3 moveDirection = orientation.forward * input.y + orientation.right * input.x;
+        moveDirection.y = 0f; // Optionally constrain movement to the XZ plane
+
+        // Normalize to avoid faster diagonal movement then apply speed and deltaTime.
+        moveDirection = moveDirection.normalized;
+
+        // Apply the movement by modifying the transform's position.
+        transform.position += moveDirection * moveSpeed * Time.deltaTime;
     }
 }
