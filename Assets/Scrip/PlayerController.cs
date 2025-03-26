@@ -1,54 +1,101 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public Transform orientation; // Reference used to orient the movement
+    [Header("Movement")]
+    public float walkSpeed;
+    public float runSpeed;
+    bool isRunning;
 
-    private Rigidbody rb;
-    private PlayerInput playerInput;
-    private InputAction moveAction;
+    public float groundDrag;
 
-    private void Awake()
+    public float airMultiplier;
+
+    [Header("Ground Check")]
+    public float playerHeight;
+    public LayerMask whatIsGround;
+    bool grounded;
+
+    public Transform orientation;
+
+    float horizontalInput;
+    float verticalInput;
+
+    Vector3 moveDirection;
+
+    Rigidbody rb;
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-
-        // Get the PlayerInput component and the "Move" action from the Input Action Asset
-        playerInput = GetComponent<PlayerInput>();
-        moveAction = playerInput.actions["Move"];
-    }
-
-    private void OnEnable()
-    {
-        moveAction.Enable();
-    }
-
-    private void OnDisable()
-    {
-        moveAction.Disable();
+        isRunning = false;
     }
 
     private void Update()
     {
+        // ground check
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
+
+        MyInput();
+        SpeedControl();
+
+        // handle drag
+        if (grounded)
+            rb.linearDamping = groundDrag;
+        else
+            rb.linearDamping = 0;
+    }
+
+    private void FixedUpdate()
+    {
         MovePlayer();
+    }
+
+    private void MyInput()
+    {
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            isRunning = true;
+        }
+        else
+        {
+            isRunning = false;
+        }
     }
 
     private void MovePlayer()
     {
-        // Read input from the Move action (x for sideways, y for forward/backward)
-        Vector2 input = moveAction.ReadValue<Vector2>();
+        // calculate movement direction
+        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        // Calculate the move direction relative to the orientation transform.
-        // For example, using the forward and right vectors from the orientation.
-        Vector3 moveDirection = orientation.forward * input.y + orientation.right * input.x;
-        moveDirection.y = 0f; // Optionally constrain movement to the XZ plane
+        float currentSpeed = isRunning ? runSpeed : walkSpeed;
 
-        // Normalize to avoid faster diagonal movement then apply speed and deltaTime.
-        moveDirection = moveDirection.normalized;
+        // on ground
+        if(grounded)
+            rb.AddForce(moveDirection.normalized * currentSpeed * 10f, ForceMode.Force);
 
-        // Apply the movement by modifying the transform's position.
-        transform.position += moveDirection * moveSpeed * Time.deltaTime;
+        // in air
+        else if(!grounded)
+            rb.AddForce(moveDirection.normalized * currentSpeed * 10f * airMultiplier, ForceMode.Force);
     }
+
+    private void SpeedControl()
+    {
+        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+
+        float currentSpeed = isRunning ? runSpeed : walkSpeed;
+
+        // limit velocity if needed
+        if(flatVel.magnitude > currentSpeed)
+        {
+            Vector3 limitedVel = flatVel.normalized * currentSpeed;
+            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+        }
+    }
+
 }
