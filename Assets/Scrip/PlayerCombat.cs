@@ -24,7 +24,8 @@ public class PlayerCombat : MonoBehaviour
         }
         
         // รีเซ็ต combo หากไม่มีการโจมตีต่อเนื่อง
-        if(attackTimer > 0) {
+        if(attackTimer > 0) 
+        {
             attackTimer -= Time.deltaTime;
             if(attackTimer <= 0) {
                 attackIndex = 0;
