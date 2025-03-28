@@ -21,9 +21,7 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Input.GetMouseButtonUp(0))
         {
-            Debug.Log("Mouse Clicked!");
             attackStateController.BtnAttack();
         }
     }
 }
-
