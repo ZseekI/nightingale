@@ -29,7 +29,7 @@ public class PlayerCamera : MonoBehaviour
         Vector3 inputDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         if(inputDir != Vector3.zero)
-            player.forward = Vector3.Slerp(playerMesh.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
+            playerMesh.forward = Vector3.Slerp(playerMesh.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
     }
 
     private void FindPlayerMesh()

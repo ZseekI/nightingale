@@ -1,22 +1,31 @@
 using UnityEngine;
 
-public class EnergyManager : MonoBehaviour {
+public class EnergyManager : MonoBehaviour 
+{
     public static EnergyManager Instance;
     
     public int maxEnergy = 100;
     public int currentEnergy = 0;
+
+    [Header("EnergyUi")]
+    public Transform energyBar;
     
-    void Awake() {
-        if(Instance == null) {
+    void Awake() 
+    {
+        UpdateEnergyUI();
+        if(Instance == null) 
+        {
             Instance = this;
-        } else {
+        } else 
+        {
             Destroy(gameObject);
         }
     }
     
-    public void AddEnergy(int amount) {
+    public void AddEnergy(int amount) 
+    {
         currentEnergy = Mathf.Min(currentEnergy + amount, maxEnergy);
-        // อัปเดต UI ด้วย (ไม่แสดงตัวอย่างที่นี่)
+        UpdateEnergyUI();
     }
     
     public bool ConsumeEnergy(int amount) {
@@ -26,6 +35,15 @@ public class EnergyManager : MonoBehaviour {
             return true;
         }
         return false;
+    }
+
+    void UpdateEnergyUI() 
+    {
+        if (energyBar != null) 
+        {
+            float energyScaleX = Mathf.Clamp((float)currentEnergy / maxEnergy, 0, 1);
+            energyBar.localScale = new Vector3(energyScaleX, energyBar.localScale.y, energyBar.localScale.z);
+        }
     }
 }
 

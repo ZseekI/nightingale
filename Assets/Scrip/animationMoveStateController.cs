@@ -37,12 +37,12 @@ public class animationStateController : MonoBehaviour
             animator.SetBool(isWalkingHash, false);
         }
 
-        if (!isRun && runPressed)
+        if (!isRun && runPressed && moveActionPressed)
         {
             animator.SetBool(isRunHash, true);
         }
 
-        if (isRun && !runPressed)
+        if (isRun && (!runPressed || !moveActionPressed))
         {
             animator.SetBool(isRunHash, false);
         }
