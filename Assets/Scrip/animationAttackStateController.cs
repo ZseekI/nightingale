@@ -14,6 +14,7 @@ public class animationAttackStateController : MonoBehaviour
         if (_animatorPlayer == null)
         {
             FindPlayer();
+            Debug.Log(_animatorPlayer);
         }
     }
 
@@ -21,6 +22,7 @@ public class animationAttackStateController : MonoBehaviour
     {
         _animatorPlayer = GameObject.FindGameObjectWithTag("PlayerMesh").GetComponent<Animator>();
         CountAttackClick = 0;
+        
     }
     
     public void BtnAttack()
