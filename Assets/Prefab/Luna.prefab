@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9993078
+      value: 0.99517363
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       propertyPath: m_LocalRotation.x
@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.03720097
+      value: -0.09812995
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       propertyPath: m_LocalRotation.z
@@ -88,6 +88,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4819525092395040674}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5437108080219659909}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7941448591863231351}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5635665048795327929}
   m_SourcePrefab: {fileID: 100100000, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
 --- !u!1 &1820548746579897110 stripped
 GameObject:
@@ -150,5 +159,45 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b008da3271e9f34487e6e2ccd490c24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5437108080219659909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820548746579897110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4be1c39ff53421e498b37a256a37038e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackCombo: []
+  playerMaxHP: 100
+  knockbackForce: 5
+--- !u!114 &-7941448591863231351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820548746579897110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e395378875d948345b076377240b33a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpBar: {fileID: 0}
+--- !u!114 &5635665048795327929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820548746579897110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a00e263f12e09f439558228874b1b2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

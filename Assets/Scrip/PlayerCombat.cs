@@ -11,10 +11,6 @@ public class PlayerCombat : MonoBehaviour
         {
             attackStateController = combatManager.GetComponent<animationAttackStateController>();
         }
-        else
-        {
-            Debug.LogError("CombatAnimationManager ไม่ถูกพบใน Scene!");
-        }
     }
 
     void Update()

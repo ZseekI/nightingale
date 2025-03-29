@@ -34,7 +34,7 @@ public class managerUI : MonoBehaviour
 
         if (characterTimer > 0)
         {
-            Debug.Log(characterTimer);
+            //Debug.Log(characterTimer);
         }
 
         UpdateUIBar();

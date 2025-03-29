@@ -6,11 +6,19 @@ TagManager:
   tags:
   - PlayerMesh
   - CombatAnimationManager
+  - A
+  - FLeft
+  - FRight
+  - BLeft
+  - BRight
+  - Direct
+  - NearHit
+  - Trigger
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Enemy
   - Water
   - UI
   - 

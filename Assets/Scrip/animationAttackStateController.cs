@@ -11,6 +11,7 @@ public class animationAttackStateController : MonoBehaviour
     int isWalkingHash;
     int isRunHash;
     public int T = 5;
+    public int intAttack;
     void Start()
     {
         FindPlayer();
@@ -28,7 +29,7 @@ public class animationAttackStateController : MonoBehaviour
     public void BtnAttack()
     {
         CountAttackClick++;
-
+        intAttack = 1;
         _animatorPlayer.SetInteger("intAttackPhase", 1);
         resetAttackTime = attackResetTime;
         
@@ -36,8 +37,23 @@ public class animationAttackStateController : MonoBehaviour
 
         private void Update()
     {
-        bool isWalking = _animatorPlayer.GetBool(isWalkingHash);
-        bool isRun = _animatorPlayer.GetBool(isRunHash);
+        if (_animatorPlayer != null)
+        {
+            bool isWalking = _animatorPlayer.GetBool(isWalkingHash);
+            bool isRun = _animatorPlayer.GetBool(isRunHash);
+            resetIdleTime = Mathf.Max(resetIdleTime - Time.deltaTime, 0);
+
+        if (resetIdleTime > 0 && !isWalking && !isRun) 
+            {
+                _animatorPlayer.SetBool("isIdle", true);
+            }
+        
+        else
+            { 
+                    resetIdleTime = 0;
+                    _animatorPlayer.SetBool("isIdle", false);
+            }
+        }
 
         if (_animatorPlayer == null)
         {
@@ -53,23 +69,6 @@ public class animationAttackStateController : MonoBehaviour
                 CheckedAttackPhase();
             }
         }
-
-        
-        resetIdleTime = Mathf.Max(resetIdleTime - Time.deltaTime, 0);
-        if (resetIdleTime > 0 && !isWalking && !isRun) 
-            {
-                _animatorPlayer.SetBool("isIdle", true);
-            }
-        
-        else
-            { 
-                    resetIdleTime = 0;
-                    _animatorPlayer.SetBool("isIdle", false);
-            }
-    
-        
-
-    
     }
 
     public void CheckedAttackPhase()
@@ -80,6 +79,7 @@ public class animationAttackStateController : MonoBehaviour
             //Debug.Log("Current State 1");
             if(CountAttackClick > 1 && resetAttackTime > 0)
             {
+                intAttack = 2;
                 _animatorPlayer.SetInteger("intAttackPhase", 2);
             }
             else
@@ -92,6 +92,7 @@ public class animationAttackStateController : MonoBehaviour
             //Debug.Log("Current State 2");
             if(CountAttackClick > 2 && resetAttackTime > 0)
             {
+                intAttack = 3;
                 _animatorPlayer.SetInteger("intAttackPhase", 3);
             }
             else
@@ -104,6 +105,7 @@ public class animationAttackStateController : MonoBehaviour
             //Debug.Log("Current State 3");
             if(CountAttackClick > 3 && resetAttackTime > 0)
             {
+               intAttack = 4;
                 _animatorPlayer.SetInteger("intAttackPhase", 4);
             }
             else
@@ -116,6 +118,7 @@ public class animationAttackStateController : MonoBehaviour
             //Debug.Log("Current State 4");
             if(CountAttackClick > 4 && resetAttackTime > 0)
             {
+                intAttack = 5;
                 _animatorPlayer.SetInteger("intAttackPhase", 5);
             }
             else
@@ -137,6 +140,7 @@ public class animationAttackStateController : MonoBehaviour
     {
 
         CountAttackClick = 0;
+       intAttack = 0;
         resetIdleTime = idleResetTime;
         _animatorPlayer.SetInteger("intAttackPhase", 0);
         
