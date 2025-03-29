@@ -30,7 +30,6 @@ public class animationAttackStateController : MonoBehaviour
         CountAttackClick++;
 
         _animatorPlayer.SetInteger("intAttackPhase", 1);
-
         resetAttackTime = attackResetTime;
         
     }
@@ -75,10 +74,10 @@ public class animationAttackStateController : MonoBehaviour
 
     public void CheckedAttackPhase()
     {
-        Debug.Log("Check Attack Phase");
+        //Debug.Log("Check Attack Phase");
         if (_animatorPlayer.GetCurrentAnimatorStateInfo(0).IsName("Boxing"))
         {
-            Debug.Log("Current State 1");
+            //Debug.Log("Current State 1");
             if(CountAttackClick > 1 && resetAttackTime > 0)
             {
                 _animatorPlayer.SetInteger("intAttackPhase", 2);
@@ -90,7 +89,7 @@ public class animationAttackStateController : MonoBehaviour
         }
         else if (_animatorPlayer.GetCurrentAnimatorStateInfo(0).IsName("Elbow Punch"))
         {
-            Debug.Log("Current State 2");
+            //Debug.Log("Current State 2");
             if(CountAttackClick > 2 && resetAttackTime > 0)
             {
                 _animatorPlayer.SetInteger("intAttackPhase", 3);
@@ -102,7 +101,7 @@ public class animationAttackStateController : MonoBehaviour
         }
         else if (_animatorPlayer.GetCurrentAnimatorStateInfo(0).IsName("Hook Punch"))
         {
-            Debug.Log("Current State 3");
+            //Debug.Log("Current State 3");
             if(CountAttackClick > 3 && resetAttackTime > 0)
             {
                 _animatorPlayer.SetInteger("intAttackPhase", 4);
@@ -114,7 +113,7 @@ public class animationAttackStateController : MonoBehaviour
         }
         else if (_animatorPlayer.GetCurrentAnimatorStateInfo(0).IsName("Headbutt"))
         {
-            Debug.Log("Current State 4");
+            //Debug.Log("Current State 4");
             if(CountAttackClick > 4 && resetAttackTime > 0)
             {
                 _animatorPlayer.SetInteger("intAttackPhase", 5);
@@ -126,7 +125,7 @@ public class animationAttackStateController : MonoBehaviour
         }
         else if (_animatorPlayer.GetCurrentAnimatorStateInfo(0).IsName("Fist Fight A"))
         {
-            Debug.Log("Current State 5");
+            //Debug.Log("Current State 5");
             if (CountAttackClick >= 5 )
             {
                 ResetAttackPhase();

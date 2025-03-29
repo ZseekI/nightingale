@@ -11,7 +11,7 @@ public class EventListener : MonoBehaviour
 
     public void CheckAnimEvent()
     {
-        Debug.Log("Animation End Check");
+        //Debug.Log("Animation End Check");
         _mngrAttack.CheckedAttackPhase();
     }
 }
