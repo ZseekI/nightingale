@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3892704144099538305}
   m_Layer: 0
   m_Name: NearHit
-  m_TagString: Trigger
+  m_TagString: NearHit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4440,6 +4440,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8326930356791198850}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2343596912613559395}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -753538268472980090}
     - targetCorrespondingSourceObject: {fileID: 2337861835845170449, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5626943305645452643}
@@ -4512,6 +4518,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 0
+--- !u!114 &-2343596912613559395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8605568613908754098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58200d545cef52844b0635011e9f6c52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-753538268472980090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8605568613908754098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d42c583abd76324191c47d40b95dc64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isNearHit: 0
+  isDirect: 0
 --- !u!4 &8991218251879519569 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 534608401998317234, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}

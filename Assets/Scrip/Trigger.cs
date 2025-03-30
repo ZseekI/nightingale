@@ -2,27 +2,31 @@ using UnityEngine;
 
 public class Trigger : MonoBehaviour
 {
-    public float fLeftSpeed = 150f;
-    public float bLeftSpeed = 120f;
-    public float fRightSpeed = 150f;
-    public float bRightSpeed = 120f;
-    Animator _enemyAnimator;
+    public float fLeftSpeed = -1f;
+    public float bLeftSpeed = -2f;
+    public float fRightSpeed = 1f;
+    public float bRightSpeed = 2f;
     RotateEnemy rotateEnemy;
-    private bool isNearHit = false;
-    private bool isDirect = false;
+    private enemyAnimationStateController _emngrAttack;
+    private int triggerCount;
     void Start()
     {
         rotateEnemy = GameObject.FindGameObjectWithTag("A").GetComponent<RotateEnemy>();
-        _enemyAnimator = GameObject.FindGameObjectWithTag ("A").GetComponent<Animator>();
+        _emngrAttack = GameObject.FindGameObjectWithTag ("A").GetComponent<enemyAnimationStateController>();
     }
 
     void Update()
     {
-     if (_enemyAnimator != null)
+        
+
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
         {
-            //_enemyAnimator.SetBool("isNearHit", isNearHit && isDirect);
-            //_enemyAnimator.SetBool("isFarHit", !(isNearHit && isDirect));
-        }   
+            triggerCount++; // เพิ่มจำนวน Trigger ที่ Player อยู่ในนั้น
+        }
     }
 
     void OnTriggerStay (Collider other)
@@ -44,13 +48,45 @@ public class Trigger : MonoBehaviour
                     rotateEnemy.rotationSpeed = bRightSpeed;
                     break;
                 case "NearHit":
-                    isNearHit = true;
+                    _emngrAttack.isNearHit = true;
                     break;
                 case "Direct":
-                    isDirect = true;
+                    _emngrAttack.isDirect = true;
                     rotateEnemy.rotationSpeed = 0; // หยุดหมุน
                     break;
+                
             }
         }
     }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            triggerCount--; // ลดจำนวน Trigger ที่ Player อยู่ในนั้น
+
+            if (triggerCount <= 0) // ถ้าไม่มี Trigger ไหนที่ Player อยู่แล้ว
+            {
+                ResetValues();
+            }
+
+            switch (gameObject.tag)
+            {
+                case "NearHit":
+                _emngrAttack.isNearHit = false;
+                break;
+                case "Direct":
+                _emngrAttack.isDirect = false;
+                break;
+            }
+        }
+    }
+
+        void ResetValues()
+    {
+        rotateEnemy.rotationSpeed = 0f; // ค่าเริ่มต้น
+    }
+
 }
+
+
