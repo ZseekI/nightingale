@@ -1,18 +1,15 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
-public class MainMenu : MonoBehaviour
+using UnityEngine.UI;
+public class Ui : MonoBehaviour
 {
-    // ฟังก์ชันเริ่มเกม
-    public void StartGame()
-    {
-        SceneManager.LoadScene("Start"); // แทน "GameScene" ด้วยชื่อฉากเกมของคุณ
-    }
+  public void start_game ()
+  {
+	  SceneManager.LoadScene(1);
+  }
 
-    // ฟังก์ชันออกจากเกม
-    public void ExitGame()
-    {
-        Application.Quit(); // ใช้ได้จริงเมื่อรันเกมเป็น Standalone หรือ Build ออกมาแล้ว
-        Debug.Log("Game is exiting..."); // สำหรับตรวจสอบตอนทดสอบใน Unity Editor
-    }
+   public void exit_game ()
+  {
+	 Application.Quit();
+  }
 }
