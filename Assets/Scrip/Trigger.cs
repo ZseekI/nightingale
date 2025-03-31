@@ -33,7 +33,7 @@ public class Trigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            switch (gameObject.tag)
+            switch (gameObject.name)
             {
                 case "FLeft":
                     rotateEnemy.rotationSpeed = fLeftSpeed;
@@ -70,13 +70,13 @@ public class Trigger : MonoBehaviour
                 ResetValues();
             }
 
-            switch (gameObject.tag)
+            switch (gameObject.name)
             {
                 case "NearHit":
-                _emngrAttack.isNearHit = false;
+               _emngrAttack.isNearHit = false;
                 break;
                 case "Direct":
-                _emngrAttack.isDirect = false;
+               _emngrAttack.isDirect = false;
                 break;
             }
         }

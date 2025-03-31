@@ -27,7 +27,7 @@ public class CombatSystem : MonoBehaviour
     
     public void ExecuteAttack()
     {
-        Debug.Log("GG");
+        //Debug.Log("GG");
         int attackPhase = attackController.intAttack;
         
         if (attackPhase <= 0 || attackPhase > attackCombo.Length)
@@ -59,17 +59,16 @@ public class CombatSystem : MonoBehaviour
                 
                 if (currentAttack.knockbackForce > 0)
                 {
-                    Rigidbody enemyRb = hitCollider.GetComponent<Rigidbody>();
+                    Rigidbody enemyRb = hitCollider.GetComponentInParent<Rigidbody>(); 
                     if (enemyRb != null)
                     {
                         Vector3 knockbackDirection = (hitCollider.transform.position - transform.position).normalized;
                         enemyRb.AddForce(knockbackDirection * currentAttack.knockbackForce, ForceMode.Impulse);
-                    }
+                    } 
                 }
             }
-        }
+        }       
     }
-    
     private void InitializeDefaultAttackCombo()
     {
         attackCombo = new AttackData[5];

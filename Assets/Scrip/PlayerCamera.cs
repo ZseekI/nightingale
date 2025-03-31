@@ -12,6 +12,8 @@ public class PlayerCamera : MonoBehaviour
     private void Start()
     {
         FindPlayerMesh();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
@@ -42,7 +44,7 @@ public class PlayerCamera : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("PlayerMesh ไม่ถูกพบ! ตรวจสอบว่า Player Mesh มี Tag: PlayerMesh หรือไม่");
+            //Debug.LogWarning("PlayerMesh ไม่ถูกพบ! ตรวจสอบว่า Player Mesh มี Tag: PlayerMesh หรือไม่");
         }
     }
 }

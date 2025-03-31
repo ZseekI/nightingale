@@ -11,6 +11,7 @@ public class RotateEnemy : MonoBehaviour
         {
             Vector3 pivotPoint = enemyLocation.Instance.GetBonePosition(); // ดึงตำแหน่งของกระดูก
             RotateAroundPoint(pivotPoint);
+            //Debug.Log("pivotPoint" + pivotPoint);
         }
     }
 
