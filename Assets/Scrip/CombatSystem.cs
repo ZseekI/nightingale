@@ -112,10 +112,17 @@ public class CombatSystem : MonoBehaviour
                 if (currentAttack.knockbackForce > 0)
                 {
                     Rigidbody enemyRb = hitCollider.GetComponentInParent<Rigidbody>();
+                    // ดึงค่า mass ของศัตรู
+                    float enemyMass = enemyRb.mass;
                     if (enemyRb != null)
                     {
                         Vector3 knockbackDirection = (hitCollider.transform.position - transform.position).normalized;
-                        enemyRb.AddForce(knockbackDirection * currentAttack.knockbackForce, ForceMode.Impulse);
+                        // คำนวณแรงกระแทกตามกฎ F = ma
+                        float knockbackAcceleration = currentAttack.damage * 2f; // ค่าประมาณที่ปรับแต่งได้
+                        Vector3 knockbackForce = knockbackDirection * enemyMass * knockbackAcceleration;
+
+                        // ใช้ AddForce โดยใช้ ForceMode.Impulse เพื่อให้ส่งผลทันที
+                        enemyRb.AddForce(knockbackForce, ForceMode.Impulse);
                     }
                 }
             }

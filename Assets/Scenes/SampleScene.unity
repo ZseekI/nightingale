@@ -1085,6 +1085,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 11.290259
       objectReference: {fileID: 0}
+    - target: {fileID: 824893682926321628, guid: 3ead42b9c1472404c900109e8a6cfa71, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 838273246597465957, guid: 3ead42b9c1472404c900109e8a6cfa71, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 1.6284439e-12
@@ -2371,7 +2375,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4932066250146650107, guid: 3ead42b9c1472404c900109e8a6cfa71, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4935781677729603555, guid: 3ead42b9c1472404c900109e8a6cfa71, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4200,8 +4204,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 469648339}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.05, y: 1, z: 12.94}
+  m_LocalRotation: {x: -0.0000000020161133, y: 0.3826835, z: -0.0000000048673274, w: 0.92387956}
+  m_LocalPosition: {x: -8.060935, y: 1.4806094, z: 10.024229}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6102,7 +6106,7 @@ Transform:
   m_GameObject: {fileID: 1097339330}
   serializedVersion: 2
   m_LocalRotation: {x: 0.12311688, y: 0.0000000050972875, z: -6.3237315e-10, w: 0.9923922}
-  m_LocalPosition: {x: -11.99, y: 0.77, z: 14.12}
+  m_LocalPosition: {x: -16.460001, y: 0.77, z: 20.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6928,7 +6932,7 @@ Transform:
   m_GameObject: {fileID: 1331663761}
   serializedVersion: 2
   m_LocalRotation: {x: 0.12311687, y: 0.0000000050972875, z: -6.323734e-10, w: 0.99239224}
-  m_LocalPosition: {x: -11.99, y: 0.77, z: 14.12}
+  m_LocalPosition: {x: -16.460001, y: 0.77, z: 20.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8475,7 +8479,7 @@ Transform:
   m_GameObject: {fileID: 1837705907}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.05, y: 1, z: 12.94}
+  m_LocalPosition: {x: -15.52, y: 1, z: 19.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8526,8 +8530,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54bbf360850282040b5587a99fcd64f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  runSpeed: 10
+  accelerationForce: 20
+  maxWalkSpeed: 5
+  maxRunSpeed: 25
   groundDrag: 2
   airMultiplier: 0
   playerHeight: 2
@@ -8614,8 +8619,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1926947643}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0013215226, y: 0.94938797, z: 0.003994674, w: 0.31407765}
-  m_LocalPosition: {x: -17.60541, y: -0.123660445, z: 25.160715}
+  m_LocalRotation: {x: -0.0012656882, y: 0.9394675, z: 0.0034705475, w: 0.34261826}
+  m_LocalPosition: {x: -19.034994, y: -0.11955297, z: 28.540806}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8883,10 +8888,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2086947662}
   - component: {fileID: 2086947661}
-  - component: {fileID: 2086947663}
   m_Layer: 0
   m_Name: ManagerUI
-  m_TagString: Untagged
+  m_TagString: ManagerUI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8905,6 +8909,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resetTime: 1.5
   ccdUIBar: {fileID: 590685287}
+  characterHP1: 0
+  characterHP2: 0
+  isSetHp1: 0
+  isSetHp2: 0
 --- !u!4 &2086947662
 Transform:
   m_ObjectHideFlags: 0
@@ -8920,21 +8928,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2086947663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2086947660}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 878b48d4c9183b44ea6d7a4c2717b350, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHP: 100
-  currentHP: 100
-  damage: 10
 --- !u!1 &2092973656
 GameObject:
   m_ObjectHideFlags: 0

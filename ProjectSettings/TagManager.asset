@@ -15,6 +15,7 @@ TagManager:
   - NearHit
   - Trigger
   - Transform
+  - ManagerUI
   layers:
   - Default
   - TransparentFX

@@ -1,19 +1,18 @@
 using UnityEngine;
 
-
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
-    public float walkSpeed;
-    public float runSpeed;
+    public float accelerationForce = 20f; // กำหนดค่าความเร่ง a
+    public float maxWalkSpeed = 5f;
+    public float maxRunSpeed = 10f;
     bool isRunning;
 
-    public float groundDrag;
-
-    public float airMultiplier;
+    public float groundDrag = 5f;
+    public float airMultiplier = 0.5f;
 
     [Header("Ground Check")]
-    public float playerHeight;
+    public float playerHeight = 2f;
     public LayerMask whatIsGround;
     bool grounded;
 
@@ -30,22 +29,20 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        rb.mass = 70f; // ตั้งมวลของตัวละคร (kg)
         isRunning = false;
     }
 
     private void Update()
     {
-        // ground check
+        // ตรวจสอบว่าตัวละครอยู่บนพื้นหรือไม่
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.3f, whatIsGround);
 
         MyInput();
         SpeedControl();
 
-        // handle drag
-        if (grounded)
-            rb.linearDamping = groundDrag;
-        else
-            rb.linearDamping = 0;
+        // กำหนดแรงเสียดทานของอากาศ
+        rb.drag = grounded ? groundDrag : 0;
     }
 
     private void FixedUpdate()
@@ -58,44 +55,35 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            isRunning = true;
-        }
-        else
-        {
-            isRunning = false;
-        }
+        isRunning = Input.GetKey(KeyCode.LeftShift);
     }
 
     private void MovePlayer()
     {
-        // calculate movement direction
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        // คำนวณทิศทางของการเคลื่อนที่
+        moveDirection = (orientation.forward * verticalInput + orientation.right * horizontalInput).normalized;
 
-        float currentSpeed = isRunning ? runSpeed : walkSpeed;
+        float targetSpeed = isRunning ? maxRunSpeed : maxWalkSpeed;
 
-        // on ground
-        if(grounded)
-            rb.AddForce(moveDirection.normalized * currentSpeed * 10f, ForceMode.Force);
+        // ใช้สมการ F = ma → F = mass * acceleration
+        Vector3 force = moveDirection * accelerationForce * rb.mass; 
 
-        // in air
-        else if(!grounded)
-            rb.AddForce(moveDirection.normalized * currentSpeed * 10f * airMultiplier, ForceMode.Force);
+        if (grounded)
+            rb.AddForce(force, ForceMode.Force); // ใช้แรงแบบปกติ
+        else
+            rb.AddForce(force * airMultiplier, ForceMode.Force); // ลดแรงขณะลอย
     }
 
     private void SpeedControl()
     {
-        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        float targetSpeed = isRunning ? maxRunSpeed : maxWalkSpeed;
 
-        float currentSpeed = isRunning ? runSpeed : walkSpeed;
-
-        // limit velocity if needed
-        if(flatVel.magnitude > currentSpeed)
+        // ถ้าความเร็วเกินที่กำหนด → ลดความเร็วลง
+        if (flatVel.magnitude > targetSpeed)
         {
-            Vector3 limitedVel = flatVel.normalized * currentSpeed;
-            rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+            Vector3 limitedVel = flatVel.normalized * targetSpeed;
+            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
     }
-
 }
