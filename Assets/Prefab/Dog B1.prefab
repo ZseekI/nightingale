@@ -140,7 +140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fLeftSpeed: 0
   bLeftSpeed: 0
-  fRightSpeed: 80
+  fRightSpeed: 160
   bRightSpeed: 0
 --- !u!23 &3720310749793854924
 MeshRenderer:
@@ -264,7 +264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fLeftSpeed: 0
-  bLeftSpeed: -160
+  bLeftSpeed: -320
   fRightSpeed: 0
   bRightSpeed: 0
 --- !u!23 &7312276755014542332
@@ -604,8 +604,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f24a0f1065c3154ab0ec27e7047749c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 200
-  stunThreshold: 50
+  maxHP: 1000
+  stunThreshold: 80
   hpBar: {fileID: 0}
   stunBar: {fileID: 0}
 --- !u!1 &5374125995095997946
@@ -687,7 +687,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fLeftSpeed: 0
   bLeftSpeed: 0
-  fRightSpeed: 80
+  fRightSpeed: 160
   bRightSpeed: 0
 --- !u!23 &8047800610091670775
 MeshRenderer:
@@ -941,7 +941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d833f3b0fa731e94b8c7940165850e95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fLeftSpeed: -80
+  fLeftSpeed: -160
   bLeftSpeed: 0
   fRightSpeed: 0
   bRightSpeed: 0
@@ -1195,7 +1195,7 @@ MonoBehaviour:
   fLeftSpeed: 0
   bLeftSpeed: 0
   fRightSpeed: 0
-  bRightSpeed: 160
+  bRightSpeed: 320
 --- !u!23 &2990946989602747883
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1317,7 +1317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d833f3b0fa731e94b8c7940165850e95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fLeftSpeed: -80
+  fLeftSpeed: -160
   bLeftSpeed: 0
   fRightSpeed: 0
   bRightSpeed: 0
@@ -4891,6 +4891,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.x
       value: 89.98021
       objectReference: {fileID: 0}
+    - target: {fileID: 7676629091628940629, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7676629091628940629, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7709554059677605351, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -89.98021
@@ -5195,6 +5203,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3201446409585558153}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 414527515256032251}
     - targetCorrespondingSourceObject: {fileID: 2337861835845170449, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2807864124841845277}
@@ -5316,8 +5327,10 @@ MonoBehaviour:
   beforeAttackDelay2: 3
   isNearHit: 0
   isDirect: 0
-  distanceToMove: 31.66
+  distanceToMoveX: -31.66
+  distanceToMoveZ: 0
   attack: 0
+  playerDistance: 0
 --- !u!114 &3201446409585558153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5330,6 +5343,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58200d545cef52844b0635011e9f6c52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &414527515256032251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4932066250146650107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36960f5166107d74fb08dc77428fd820, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  object1: {fileID: 7059498337056504310}
+  object2: {fileID: 0}
+  check: 0
 --- !u!4 &5708849858335427905 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a267d9b0c1aebae4b89610dc7d7c724c, type: 3}

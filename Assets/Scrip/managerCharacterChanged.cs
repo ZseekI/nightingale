@@ -6,40 +6,43 @@ public class managerCharacterChanged : MonoBehaviour
     public Transform PlayerMesh;
     private int indexPreviousCharacter;
     private Quaternion previousRotation;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         mngrCharacter = GameObject.Find("ManagerCharacter").GetComponent<managerCharacter>(); 
-        GameObject tempDefaultCharacter = mngrCharacter.character[0];
+        GameObject tempDefaultCharacter = Instantiate(mngrCharacter.character[0], PlayerMesh);
         tempDefaultCharacter.transform.localRotation = Quaternion.identity;
-        
-        Instantiate(tempDefaultCharacter, PlayerMesh);
+
         indexPreviousCharacter = 0;
-        
     }
 
     public void ChangeCharacter(int characterIndex)
     {
         if (characterIndex != indexPreviousCharacter)
         {
-            Transform currentCharacter = PlayerMesh.GetChild(0); // อ้างอิงตัวละครก่อนลบ
+            // **1️⃣ ดึงค่า HP ก่อนเปลี่ยนตัวละคร**
+            int currentHP = PlayerStatsManager.Instance.currentHP; 
+
+            // **2️⃣ เก็บ Rotation ของตัวละครก่อนลบ**
+            Transform currentCharacter = PlayerMesh.GetChild(0);
             previousRotation = currentCharacter.rotation;
-            
 
-            Destroy(PlayerMesh.GetChild(0).gameObject);
+            // **3️⃣ ลบตัวละครเดิม**
+            Destroy(currentCharacter.gameObject);
 
-            GameObject tempCharacter = mngrCharacter.character[characterIndex];
-
+            // **4️⃣ สร้างตัวละครใหม่**
+            GameObject tempCharacter = Instantiate(mngrCharacter.character[characterIndex], PlayerMesh);
             tempCharacter.transform.rotation = previousRotation;
-            Instantiate(tempCharacter, PlayerMesh);
 
-            
-            
+            // **5️⃣ กำหนดค่า HP ให้ตัวใหม่**
+            CombatSystem combatSystem = tempCharacter.GetComponent<CombatSystem>();
+            if (combatSystem != null)
+            {
+                combatSystem.SetHP(currentHP);
+            }
+
+            // **6️⃣ อัปเดตตัวละครปัจจุบัน**
             indexPreviousCharacter = characterIndex;
-            
         }
-
-        
-        
     }
 }

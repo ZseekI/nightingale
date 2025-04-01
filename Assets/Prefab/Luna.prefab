@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.92
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       propertyPath: m_LocalPosition.z
@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.4328189
+      value: 0.99642575
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       propertyPath: m_LocalRotation.x
@@ -42,7 +42,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.9014809
+      value: 0.084473826
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       propertyPath: m_LocalRotation.z
@@ -84,10 +84,10 @@ PrefabInstance:
       addedObject: {fileID: 5853078763006046054}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8182891385689608501}
+      addedObject: {fileID: 4819525092395040674}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4819525092395040674}
+      addedObject: {fileID: 8182891385689608501}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5437108080219659909}
@@ -112,8 +112,8 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820548746579897110}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 17e1bf24290b24142ac0ee11e2016557, type: 2}
+  m_Avatar: {fileID: 9000000, guid: 571ca0b94ef988148bd942b389bead57, type: 3}
+  m_Controller: {fileID: 9100000, guid: 527437d9337a15e4490280276f00fcc4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -137,18 +137,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0d72fdbb7bcb0b4cba4e148ea6ab847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8182891385689608501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1820548746579897110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4695fc1daac04bd46b9db298cdbeb4f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &4819525092395040674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,6 +147,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b008da3271e9f34487e6e2ccd490c24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8182891385689608501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820548746579897110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4695fc1daac04bd46b9db298cdbeb4f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &5437108080219659909
@@ -173,7 +173,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4be1c39ff53421e498b37a256a37038e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackCombo: []
+  attackCombo:
+  - damage: 0
+    stunValue: 0
+    energyGain: 0
+    energyConsumption: 0
+    attackRange: 0
+    knockbackForce: 0
   playerMaxHP: 100
 --- !u!114 &-7941448591863231351
 MonoBehaviour:

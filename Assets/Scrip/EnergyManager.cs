@@ -3,13 +3,27 @@ using UnityEngine;
 public class EnergyManager : MonoBehaviour 
 {
     public static EnergyManager Instance;
+    animationAttackStateController _mngrAttackState;
     
     public int maxEnergy = 100;
     public int currentEnergy = 0;
 
     [Header("EnergyUi")]
     public Transform energyBar;
-    
+
+    void Start()
+    {
+        _mngrAttackState = GameObject.FindGameObjectWithTag("CombatAnimationManager").GetComponent<animationAttackStateController>();
+    }
+
+    void Update()
+    {
+        if (currentEnergy != maxEnergy)
+        {
+            _mngrAttackState.energyCurrent = currentEnergy;
+        }
+    }
+
     void Awake() 
     {
         UpdateEnergyUI();
@@ -18,7 +32,7 @@ public class EnergyManager : MonoBehaviour
             Instance = this;
         } else 
         {
-            Destroy(gameObject);
+            ///Destroy(gameObject);
         }
     }
     
@@ -31,7 +45,7 @@ public class EnergyManager : MonoBehaviour
     public bool ConsumeEnergy(int amount) {
         if(currentEnergy >= amount) {
             currentEnergy -= amount;
-            // อัปเดต UI ด้วย
+            UpdateEnergyUI();
             return true;
         }
         return false;

@@ -10,8 +10,10 @@ public class animationAttackStateController : MonoBehaviour
     private float resetIdleTime;
     int isWalkingHash;
     int isRunHash;
-    public int T = 5;
     public int intAttack;
+    public int energyCurrent = 0;
+    public int nextEnergyRequired;
+    public int energyRequired;
     void Start()
     {
         FindPlayer();
@@ -25,12 +27,32 @@ public class animationAttackStateController : MonoBehaviour
         isRunHash = Animator.StringToHash("isRun");
         
     }
+
+    void OnEnable()
+    {
+        CombatSystem.OnAttackEnergyUpdate += UpdateEnergyRequired;
+    }
+
+    void OnDisable()
+    {
+        nextEnergyRequired = energyRequired;
+        CombatSystem.OnAttackEnergyUpdate -= UpdateEnergyRequired;
+    }
+
+    void UpdateEnergyRequired(int energyRequired)
+    {
+        this.energyRequired = energyRequired;
+    }
     
     public void BtnAttack()
     {
         CountAttackClick++;
-        intAttack = 1;
-        _animatorPlayer.SetInteger("intAttackPhase", 1);
+        Debug.Log(energyRequired);
+        if (intAttack == 0)
+        {
+            intAttack = 1;
+            _animatorPlayer.SetInteger("intAttackPhase", 1);
+        }
         resetAttackTime = attackResetTime;
         
     }
@@ -63,10 +85,13 @@ public class animationAttackStateController : MonoBehaviour
         if(resetAttackTime > 0)
         {
             resetAttackTime = Mathf.Max(resetAttackTime - Time.deltaTime, 0);
-            if (resetAttackTime == 0 && CountAttackClick > T)
+            if (resetAttackTime == 0)
             {
-                Debug.Log("resetAttackTime"+resetAttackTime);
-                CheckedAttackPhase();
+                CountAttackClick = 0;
+                if (intAttack == 1)
+                {
+                    CheckedAttackPhase();
+                }
             }
         }
     }
@@ -77,7 +102,7 @@ public class animationAttackStateController : MonoBehaviour
         if (_animatorPlayer.GetCurrentAnimatorStateInfo(0).IsName("Boxing"))
         {
             //Debug.Log("Current State 1");
-            if(CountAttackClick > 1 && resetAttackTime > 0)
+            if(CountAttackClick > 1 && energyCurrent >= energyRequired)
             {
                 intAttack = 2;
                 _animatorPlayer.SetInteger("intAttackPhase", 2);
@@ -90,7 +115,7 @@ public class animationAttackStateController : MonoBehaviour
         else if (_animatorPlayer.GetCurrentAnimatorStateInfo(0).IsName("Elbow Punch"))
         {
             //Debug.Log("Current State 2");
-            if(CountAttackClick > 2 && resetAttackTime > 0)
+            if(CountAttackClick > 2 && energyCurrent >= energyRequired)
             {
                 intAttack = 3;
                 _animatorPlayer.SetInteger("intAttackPhase", 3);
@@ -103,7 +128,7 @@ public class animationAttackStateController : MonoBehaviour
         else if (_animatorPlayer.GetCurrentAnimatorStateInfo(0).IsName("Hook Punch"))
         {
             //Debug.Log("Current State 3");
-            if(CountAttackClick > 3 && resetAttackTime > 0)
+            if(CountAttackClick > 3 && energyCurrent >= energyRequired)
             {
                intAttack = 4;
                 _animatorPlayer.SetInteger("intAttackPhase", 4);
@@ -116,7 +141,7 @@ public class animationAttackStateController : MonoBehaviour
         else if (_animatorPlayer.GetCurrentAnimatorStateInfo(0).IsName("Headbutt"))
         {
             //Debug.Log("Current State 4");
-            if(CountAttackClick > 4 && resetAttackTime > 0)
+            if(CountAttackClick > 4 && energyCurrent >= energyRequired)
             {
                 intAttack = 5;
                 _animatorPlayer.SetInteger("intAttackPhase", 5);
@@ -128,11 +153,7 @@ public class animationAttackStateController : MonoBehaviour
         }
         else if (_animatorPlayer.GetCurrentAnimatorStateInfo(0).IsName("Fist Fight A"))
         {
-            //Debug.Log("Current State 5");
-            if (CountAttackClick >= 5 )
-            {
                 ResetAttackPhase();
-            }
         }
     }
 
@@ -140,8 +161,9 @@ public class animationAttackStateController : MonoBehaviour
     {
 
         CountAttackClick = 0;
-       intAttack = 0;
+        intAttack = 0;
         resetIdleTime = idleResetTime;
+        energyRequired = 0;
         _animatorPlayer.SetInteger("intAttackPhase", 0);
         
     }

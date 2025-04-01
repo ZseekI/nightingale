@@ -8,6 +8,7 @@ public class PlayerHPUI : MonoBehaviour
     void Start()
     {
         combatSystem = GameObject.FindGameObjectWithTag("PlayerMesh").GetComponent<CombatSystem>();
+        hpBar = GameObject.FindGameObjectWithTag("EditorOnly").transform;
     }
 
     void Update()
