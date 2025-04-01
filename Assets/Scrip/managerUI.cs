@@ -9,12 +9,16 @@ public class managerUI : MonoBehaviour
     float characterTimer = 0;
     [Header("ChangedCharacterDelayBar")]
     public Transform ccdUIBar;
+    public int characterHP1;
+    public int characterHP2;
+
+    public bool isSetHp1;
+    public bool isSetHp2;
     private managerCharacterChanged mngrCharacterChange;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         mngrCharacterChange = GameObject.FindGameObjectWithTag("Player").GetComponent<managerCharacterChanged>();
-
     }
 
     void Update()
@@ -37,6 +41,8 @@ public class managerUI : MonoBehaviour
             //Debug.Log(characterTimer);
         }
 
+        
+
         UpdateUIBar();
     }
 
@@ -48,5 +54,7 @@ public class managerUI : MonoBehaviour
             ccdUIBar.localScale = new Vector3(scaleX, ccdUIBar.localScale.y, ccdUIBar.localScale.z); 
         }
     }
+
+    
 
 }

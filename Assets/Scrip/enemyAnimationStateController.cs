@@ -20,7 +20,7 @@ public class enemyAnimationStateController : MonoBehaviour
     private bool canAttack;
     public float playerDistance;
     private float debugTime;
-    bool debug;
+    public bool debug;
     
     
     void Start()
@@ -41,10 +41,11 @@ public class enemyAnimationStateController : MonoBehaviour
         {
             debugTime -= Time.deltaTime; if (debugTime < 0) debugTime = 0;
         }
-        if (debugTime == 0 && debug)
+        if (debug)
         {
-            debug = false;
-            Reset();
+            AnimationAttackPhase();
+            //debug = false;
+            //Reset();
         }
 
         if (attack == 0)
@@ -315,7 +316,7 @@ public class enemyAnimationStateController : MonoBehaviour
             //Debug.Log("isEnd False");
             animator.SetBool("isEnd", false);
             canAttack = true;
-            debug = true;
+            //debug = true;
         }
     }
     void Reset()
