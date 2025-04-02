@@ -23,9 +23,9 @@ TagManager:
   - Enemy
   - Water
   - UI
-  - 
-  - 
-  - 
+  - GhostObjects
+  - Player
+  - Floor
   - 
   - 
   - 

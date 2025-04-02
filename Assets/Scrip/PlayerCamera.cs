@@ -8,16 +8,20 @@ public class PlayerCamera : MonoBehaviour
     public Transform playerMesh;
     public Rigidbody rb;
     public float rotationSpeed;
+    PlayerController playerController;
 
     private void Start()
     {
         FindPlayerMesh();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     private void Update()
     {
+        rotationSpeed = playerController.isRunning ? playerController.runTurnSpeed : playerController.walkTurnSpeed;
+
         if (playerMesh == null)
         {
             FindPlayerMesh(); // ถ้าหาไม่เจอ ให้ลองหาใหม่
@@ -31,7 +35,13 @@ public class PlayerCamera : MonoBehaviour
         Vector3 inputDir = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         if(inputDir != Vector3.zero)
+        {
             playerMesh.forward = Vector3.Slerp(playerMesh.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
+        }
+        else
+        {
+        playerMesh.forward = Vector3.Slerp(playerMesh.forward, orientation.forward, Time.deltaTime * (rotationSpeed / 2f));
+        }
     }
 
     private void FindPlayerMesh()

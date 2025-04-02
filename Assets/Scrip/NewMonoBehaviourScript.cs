@@ -2,17 +2,21 @@ using UnityEngine;
 
 public class NewMonoBehaviourScript : MonoBehaviour
 {
-    public float forceAmount = 500f;
 
-    void Update()
+    void OnTriggerEnter(Collider other)
     {
-        if (Input.GetKeyDown(KeyCode.O))
+        if (other.CompareTag("Player"))
         {
-            Rigidbody rb = transform.parent.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.AddForce(Vector3.right * forceAmount, ForceMode.Impulse);
-            }
+            Debug.Log("Hit");
         }
     }
+
+    void OriggerExit(Collider other)
+    {
+     if (other.CompareTag("PLayer"))
+     {
+        //Debug.Log("PlayerOut");
+     }   
+    }
+
 }
