@@ -5,20 +5,19 @@ public class enemyEventListener : MonoBehaviour
     [Header("Triggers to Control")]
     public Collider triggerNearAttack;
     public Collider triggerHitL;
-
-    private bool triggerNearWasDisabled = false;
-    private bool triggerHitLWasDisabled = false;
+    public Collider triggerHitR;
 
     public void HandleHitTriggerEvent(int eventID)
     {
-        Debug.Log("Received Animator Event ID: " + eventID); // ✅ ตรวจสอบค่าที่ถูกส่งมา
+        Debug.Log($"[Enemy Event] Received Animator Event ID: {eventID}"); // ✅ ตรวจสอบค่าที่ถูกส่งมา
+
         switch (eventID)
         {
             case 1: // ปิด triggerNearAttack
                 if (triggerNearAttack != null)
                 {
                     triggerNearAttack.enabled = false;
-                    triggerNearWasDisabled = true;
+                    Debug.Log("[Enemy Event] ❌ Disabled: triggerNearAttack");
                 }
                 break;
 
@@ -26,37 +25,62 @@ public class enemyEventListener : MonoBehaviour
                 if (triggerHitL != null)
                 {
                     triggerHitL.enabled = false;
-                    triggerHitLWasDisabled = true;
+                    Debug.Log("[Enemy Event] ❌ Disabled: triggerHitL");
                 }
                 break;
 
-            case 4: // เปิด triggerNearAttack อีกครั้ง
-                if (triggerNearWasDisabled && triggerNearAttack != null)
+            case 3: // ปิด triggerHitR
+                if (triggerHitR != null)
+                {
+                    triggerHitR.enabled = false;
+                    Debug.Log("[Enemy Event] ❌ Disabled: triggerHitR");
+                }
+                break;
+
+            case 4: // เปิด triggerNearAttack
+                if (triggerNearAttack != null)
                 {
                     triggerNearAttack.enabled = true;
-                    triggerNearWasDisabled = false;
-                }
-                break;
-            
-
-            case 5: // เปิด triggerNearAttack อีกครั้ง
-                if (triggerNearWasDisabled && triggerNearAttack != null)
-                {
-                    triggerNearAttack.enabled = true;
-                    triggerNearWasDisabled = false;
+                    Debug.Log("[Enemy Event] ✅ Enabled: triggerNearAttack");
                 }
                 break;
 
-            case 6: // เปิด triggerHitL อีกครั้ง
-                if (triggerHitLWasDisabled && triggerHitL != null)
+            case 5: // เปิด triggerHitL
+                if (triggerHitL != null)
                 {
                     triggerHitL.enabled = true;
-                    triggerHitLWasDisabled = false;
+                    Debug.Log("[Enemy Event] ✅ Enabled: triggerHitL");
+                }
+                break;
+
+            case 6: // เปิด triggerHitR
+                if (triggerHitR != null)
+                {
+                    triggerHitR.enabled = true;
+                    Debug.Log("[Enemy Event] ✅ Enabled: triggerHitR");
+                }
+                break;
+
+            case 7: // ปิด triggerHitL & triggerHitR พร้อมกัน
+                if (triggerHitL != null && triggerHitR != null)
+                {
+                    triggerHitL.enabled = false;
+                    triggerHitR.enabled = false;
+                    Debug.Log("[Enemy Event] ❌ Disabled: triggerHitL & triggerHitR");
+                }
+                break;
+
+            case 8: // เปิด triggerHitL & triggerHitR พร้อมกัน
+                if (triggerHitL != null && triggerHitR != null)
+                {
+                    triggerHitL.enabled = true;
+                    triggerHitR.enabled = true;
+                    Debug.Log("[Enemy Event] ✅ Enabled: triggerHitL & triggerHitR");
                 }
                 break;
 
             default:
-                Debug.LogWarning("Unknown event ID: " + eventID);
+                Debug.LogWarning($"[Enemy Event] ⚠️ Unknown event ID: {eventID}");
                 break;
         }
     }
