@@ -9,7 +9,7 @@ public class PlayerHPUI : MonoBehaviour
 
     void Start()
     {
-        hpBar = GameObject.FindGameObjectWithTag("EditorOnly").transform;
+        hpBar = GameObject.FindGameObjectWithTag("PlayerHP").transform;
     }
 
     void Update()

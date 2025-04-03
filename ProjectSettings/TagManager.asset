@@ -16,6 +16,7 @@ TagManager:
   - Trigger
   - Transform
   - ManagerUI
+  - PlayerHP
   layers:
   - Default
   - TransparentFX
