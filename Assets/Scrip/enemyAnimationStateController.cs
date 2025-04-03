@@ -3,11 +3,15 @@ using System.Collections;
 
 public class EnemyAnimationStateController : MonoBehaviour
 {
-    private Vector3 debugEnemy;
     private Animator animator;
     private DistanceChecker distanceChecker;
 
     [Header("DeBug")]
+    public bool wall;
+    public bool canCheck;
+    public Transform childObject;
+    public Vector3 childPosition; 
+    public Vector3 setChildPosition;
     public float delayTime;
     public bool isNearHit, isDirect, debug;
     public float playerDistance;
@@ -38,6 +42,10 @@ public class EnemyAnimationStateController : MonoBehaviour
     {
         // อัปเดตตัวจับเวลา
         UpdateTimers();
+        if (childObject != null)
+        {
+            childPosition = childObject.transform.position;
+        }
 
         // ถ้า debug ทำงาน ให้บังคับเรียก AnimationAttackPhase()
         //if (debug) AnimationAttackPhase();
@@ -61,6 +69,7 @@ public class EnemyAnimationStateController : MonoBehaviour
         // ตรวจสอบระยะของผู้เล่น
         if (playerDistance == 0f) distanceChecker.GetDistance();
         if (delayTime > 0) return; // ถ้ายังมี delayTime อยู่ ไม่ต้องเลือกท่าโจมตีใหม่
+        canCheck = true;
 
         // เงื่อนไขการเลือกท่าโจมตี
         if (isDirect)
@@ -117,7 +126,7 @@ public class EnemyAnimationStateController : MonoBehaviour
     public void AnimationAttackPhase()
     {
         Debug.Log("Animation End");
-
+        setChildPosition = childPosition;
         // เช็คว่าแอนิเมชันไหนเล่นจบ และรีเซ็ตสถานะ
         ResetAnimationState("MoveLittle", "isMoveLittle");
         ResetAnimationState("MoveLong", "isMoveLong");
@@ -126,52 +135,60 @@ public class EnemyAnimationStateController : MonoBehaviour
         ResetAnimationState("Bite", "isBite");
         ResetAnimationState("FarAttack", "isFarHit");
         ResetAnimationState("AttackFar2", "isFarHit2");
+
+        if(wall)
+        {
+        ResetAnimationState("MoveLittle", "isMoveLittle");
+        ResetAnimationState("MoveLong", "isMoveLong");
+        ResetAnimationState("RunTo", "isRunTo");
+        ResetAnimationState("AttackNear2", "isNearHit", true);
+        ResetAnimationState("Bite", "isBite");
+        ResetAnimationState("FarAttack", "isFarHit");
+        ResetAnimationState("AttackFar2", "isFarHit2");
+        }
     }
 
-void ResetAnimationState(string animationName, string boolParam, bool resetAttack = false)
-{
-    var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-    
-    if (!stateInfo.IsName(animationName)) return;
-    
-    // เช็คว่าแอนิเมชันยังไม่จบจริงๆ ก่อนรีเซ็ต
-    if (stateInfo.normalizedTime >= 1.0f) return; 
-
-    animator.SetBool(boolParam, false);
-    animator.SetBool("isEnd", true);
-    delayTime = afterAttackDelay;
-    attack = 0;
-    prePare = false;
-    if (boolParam != "isNearHit")
+    void ResetAnimationState(string animationName, string boolParam, bool resetAttack = false)
     {
-        SetMoveDirection();
+        var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (!stateInfo.IsName(animationName)) return;
+
+        if (stateInfo.normalizedTime >= 1.0f) return;
+
+        animator.SetBool(boolParam, false);
+        animator.SetBool("isEnd", true);
+        delayTime = afterAttackDelay;
+        attack = 0;
+        prePare = false;
+    
+        if (boolParam != "isNearHit")
+        {
+            StartCoroutine(MoveToDebugEnemy());
+        }
+
+        // ปิด wall หลังจากรีเซ็ตแอนิเมชัน
+        wall = false;
     }
-}
 
-    void SetMoveDirection()
+    public void SkipAnimation()
     {
-        // คำนวณระยะเคลื่อนที่ของศัตรู
-        Vector3 moveDirection = (-enemyTransform.right * distanceToMoveX) + (enemyTransform.forward * distanceToMoveZ);
-        debugEnemy = enemyTransform.position + moveDirection;
-        enemyTransform.position += moveDirection;
-
-        StartCoroutine(MoveToDebugEnemy());
+        canCheck = false; // ปิดการตรวจสอบซ้ำ
+        setChildPosition = childPosition;
+        AnimationAttackPhase();
     }
 
     IEnumerator MoveToDebugEnemy()
     {
         float duration = 0.2f, elapsedTime = 0f;
-        Vector3 startPosition = enemyTransform.position;
 
         while (elapsedTime < duration)
         {
-            enemyTransform.position = Vector3.Lerp(startPosition, debugEnemy, elapsedTime / duration);
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        enemyTransform.position = debugEnemy;
-        Debug.Log("Enemy moved to debugEnemy: " + enemyTransform.position);
+        enemyTransform.position = setChildPosition;
 
         StartCoroutine(ReEnableRotation());
     }

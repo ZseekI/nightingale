@@ -17,6 +17,7 @@ TagManager:
   - Transform
   - ManagerUI
   - PlayerHP
+  - Position
   layers:
   - Default
   - TransparentFX

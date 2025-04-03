@@ -17,7 +17,7 @@ public class enemyEventListener : MonoBehaviour
                 if (triggerNearAttack != null)
                 {
                     triggerNearAttack.enabled = false;
-                    Debug.Log("[Enemy Event] ❌ Disabled: triggerNearAttack");
+                    //Debug.Log("[Enemy Event] ❌ Disabled: triggerNearAttack");
                 }
                 break;
 
@@ -25,7 +25,7 @@ public class enemyEventListener : MonoBehaviour
                 if (triggerHitL != null)
                 {
                     triggerHitL.enabled = false;
-                    Debug.Log("[Enemy Event] ❌ Disabled: triggerHitL");
+                    //Debug.Log("[Enemy Event] ❌ Disabled: triggerHitL");
                 }
                 break;
 
@@ -33,7 +33,7 @@ public class enemyEventListener : MonoBehaviour
                 if (triggerHitR != null)
                 {
                     triggerHitR.enabled = false;
-                    Debug.Log("[Enemy Event] ❌ Disabled: triggerHitR");
+                    //Debug.Log("[Enemy Event] ❌ Disabled: triggerHitR");
                 }
                 break;
 
@@ -41,7 +41,7 @@ public class enemyEventListener : MonoBehaviour
                 if (triggerNearAttack != null)
                 {
                     triggerNearAttack.enabled = true;
-                    Debug.Log("[Enemy Event] ✅ Enabled: triggerNearAttack");
+                    //Debug.Log("[Enemy Event] ✅ Enabled: triggerNearAttack");
                 }
                 break;
 
@@ -49,7 +49,7 @@ public class enemyEventListener : MonoBehaviour
                 if (triggerHitL != null)
                 {
                     triggerHitL.enabled = true;
-                    Debug.Log("[Enemy Event] ✅ Enabled: triggerHitL");
+                    //Debug.Log("[Enemy Event] ✅ Enabled: triggerHitL");
                 }
                 break;
 
@@ -57,7 +57,7 @@ public class enemyEventListener : MonoBehaviour
                 if (triggerHitR != null)
                 {
                     triggerHitR.enabled = true;
-                    Debug.Log("[Enemy Event] ✅ Enabled: triggerHitR");
+                    //Debug.Log("[Enemy Event] ✅ Enabled: triggerHitR");
                 }
                 break;
 
@@ -66,7 +66,7 @@ public class enemyEventListener : MonoBehaviour
                 {
                     triggerHitL.enabled = false;
                     triggerHitR.enabled = false;
-                    Debug.Log("[Enemy Event] ❌ Disabled: triggerHitL & triggerHitR");
+                    //Debug.Log("[Enemy Event] ❌ Disabled: triggerHitL & triggerHitR");
                 }
                 break;
 
@@ -75,7 +75,7 @@ public class enemyEventListener : MonoBehaviour
                 {
                     triggerHitL.enabled = true;
                     triggerHitR.enabled = true;
-                    Debug.Log("[Enemy Event] ✅ Enabled: triggerHitL & triggerHitR");
+                    //Debug.Log("[Enemy Event] ✅ Enabled: triggerHitL & triggerHitR");
                 }
                 break;
 
