@@ -14,6 +14,7 @@ public class animationAttackStateController : MonoBehaviour
     public int energyCurrent = 0;
     public int nextEnergyRequired;
     public int energyRequired;
+    public bool isAttack;
     void Start()
     {
         FindPlayer();
@@ -51,6 +52,7 @@ public class animationAttackStateController : MonoBehaviour
         if (intAttack == 0)
         {
             intAttack = 1;
+            isAttack = true;
             _animatorPlayer.SetInteger("intAttackPhase", 1);
         }
         resetAttackTime = attackResetTime;
@@ -88,6 +90,7 @@ public class animationAttackStateController : MonoBehaviour
             if (resetAttackTime == 0)
             {
                 CountAttackClick = 0;
+                isAttack = false;
                 if (intAttack == 1)
                 {
                     CheckedAttackPhase();
@@ -157,7 +160,7 @@ public class animationAttackStateController : MonoBehaviour
         }
     }
 
-    private void ResetAttackPhase()
+    public void ResetAttackPhase()
     {
 
         CountAttackClick = 0;

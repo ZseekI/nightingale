@@ -17,7 +17,7 @@ public class SpeedDebug : MonoBehaviour
     {
         if (isOn)
         {
-            speedKMH = rb.velocity.magnitude * 3.6f;
+            speedKMH = rb.linearVelocity.magnitude * 3.6f;
         }
     }
 }

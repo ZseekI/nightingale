@@ -7,14 +7,19 @@ public class CombatSystem : MonoBehaviour
     private EnergyManager energyManager;
     private managerUI managerUI;
     private PlayerHPUI playerHPUI;
+    private PlayerController playerController;
+    public int attackPhase;
     
     [Header("Attack Properties")]
     [SerializeField] private AttackData[] attackCombo;
 
     [Header("Combat Settings")]
     [SerializeField] private int playerMaxHP = 100;
+    [SerializeField] private float playerMaxWalkSpeed = 20;
+    [SerializeField] private float playerMaxRunSpeed = 30;
+    [SerializeField] private float playerAcceleration = 7;
     private int currentPlayerHP;
-    public int damage = 10;
+    public int damage = 10; //debug
 
     public delegate void AttackEnergyUpdate(int energyRequired);
     public static event AttackEnergyUpdate OnAttackEnergyUpdate;
@@ -29,6 +34,14 @@ public class CombatSystem : MonoBehaviour
         if (managerUI == null)
         {
             managerUI = GameObject.FindGameObjectWithTag("ManagerUI").GetComponent<managerUI>();
+        }
+
+        if (playerController == null)
+        {
+            playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+            playerController.maxWalkSpeedKMH = playerMaxWalkSpeed;
+            playerController.maxRunSpeedKMH = playerMaxRunSpeed;
+            playerController.acceleration = playerAcceleration;
         }
 
         if (managerUI.isSetHp1 == false || managerUI.isSetHp2 == false)
@@ -73,61 +86,62 @@ public class CombatSystem : MonoBehaviour
         {
             TakeDamage(damage);
         }
+        if (attackController != null)
+        {
+            attackPhase = attackController.intAttack;
+        }
     }
 
-    public void ExecuteAttack()
+public void ExecuteAttack()
+{
+    if (attackPhase <= 0 || attackPhase > attackCombo.Length)
     {
-        int attackPhase = attackController.intAttack;
+        Debug.Log("GG");
+        return;
+    }
 
-        if (attackPhase <= 0 || attackPhase > attackCombo.Length)
+    AttackData currentAttack = attackCombo[attackPhase - 1];
+    AttackData nextAttack = attackCombo[attackPhase];
+    OnAttackEnergyUpdate?.Invoke(nextAttack.energyConsumption);
+
+    if (currentAttack.energyConsumption > 0 && !energyManager.ConsumeEnergy(currentAttack.energyConsumption))
+    {
+        Debug.Log("Not enough energy for this attack!");
+        return;
+    }
+
+    if (currentAttack.energyGain > 0)
+    {
+        energyManager.AddEnergy(currentAttack.energyGain);
+    }
+
+    Collider[] hitColliders = Physics.OverlapSphere(transform.position + transform.forward * currentAttack.attackRange * 0.5f, currentAttack.attackRange, LayerMask.GetMask("Enemy"));
+
+    foreach (var hitCollider in hitColliders)
+    {
+        EnemyController enemy = hitCollider.GetComponent<EnemyController>();
+        if (enemy != null)
         {
-            Debug.Log("GG");
-            return;
-        }
+            enemy.TakeDamage(currentAttack.damage, currentAttack.stunValue);
 
-        AttackData currentAttack = attackCombo[attackPhase - 1];
-        AttackData nextAttack = attackCombo[attackPhase];
-        OnAttackEnergyUpdate?.Invoke(nextAttack.energyConsumption);
-
-        if (currentAttack.energyConsumption > 0 && !energyManager.ConsumeEnergy(currentAttack.energyConsumption))
-        {
-            Debug.Log("Not enough energy for this attack!");
-            return;
-        }
-
-        if (currentAttack.energyGain > 0)
-        {
-            energyManager.AddEnergy(currentAttack.energyGain);
-        }
-
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position + transform.forward * currentAttack.attackRange * 0.5f, currentAttack.attackRange, LayerMask.GetMask("Enemy"));
-
-        foreach (var hitCollider in hitColliders)
-        {
-            EnemyController enemy = hitCollider.GetComponent<EnemyController>();
-            if (enemy != null)
+            if (currentAttack.knockbackForce > 0)
             {
-                enemy.TakeDamage(currentAttack.damage, currentAttack.stunValue);
-
-                if (currentAttack.knockbackForce > 0)
+                Rigidbody enemyRb = hitCollider.GetComponentInParent<Rigidbody>();
+                if (enemyRb != null)
                 {
-                    Rigidbody enemyRb = hitCollider.GetComponentInParent<Rigidbody>();
-                    // ดึงค่า mass ของศัตรู
                     float enemyMass = enemyRb.mass;
-                    if (enemyRb != null)
-                    {
-                        Vector3 knockbackDirection = (hitCollider.transform.position - transform.position).normalized;
-                        // คำนวณแรงกระแทกตามกฎ F = ma
-                        float knockbackAcceleration = currentAttack.damage * 2f; // ค่าประมาณที่ปรับแต่งได้
-                        Vector3 knockbackForce = knockbackDirection * enemyMass * knockbackAcceleration;
+                    Vector3 knockbackDirection = (hitCollider.transform.position - transform.position).normalized;
+                    
+                    // ใช้ค่า knockbackForce แทน damage
+                    float knockbackAcceleration = currentAttack.knockbackForce; // ค่าที่ตั้งไว้ใน AttackData
+                    Vector3 knockbackForce = knockbackDirection * enemyMass * knockbackAcceleration;
 
-                        // ใช้ AddForce โดยใช้ ForceMode.Impulse เพื่อให้ส่งผลทันที
-                        enemyRb.AddForce(knockbackForce, ForceMode.Impulse);
-                    }
+                    enemyRb.AddForce(knockbackForce, ForceMode.Impulse);
                 }
             }
         }
     }
+}
 
     public void TakeDamage(int damage)
     {

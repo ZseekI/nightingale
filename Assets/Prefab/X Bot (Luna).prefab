@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0200bcd0ead47a94e9edbf7d642d1288, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.65951455
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0200bcd0ead47a94e9edbf7d642d1288, type: 3}
       propertyPath: m_LocalRotation.x
@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0200bcd0ead47a94e9edbf7d642d1288, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.00004983024
+      value: 0.7516918
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0200bcd0ead47a94e9edbf7d642d1288, type: 3}
       propertyPath: m_LocalRotation.z
@@ -429,6 +429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4be1c39ff53421e498b37a256a37038e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackPhase: 0
   attackCombo:
   - damage: 10
     stunValue: 8
@@ -461,6 +462,9 @@ MonoBehaviour:
     attackRange: 4
     knockbackForce: 50
   playerMaxHP: 200
+  playerMaxWalkSpeed: 24
+  playerMaxRunSpeed: 60
+  playerAcceleration: 20
   damage: 10
 --- !u!114 &8648703304617632961
 MonoBehaviour:

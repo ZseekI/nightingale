@@ -7,12 +7,12 @@ public class Trigger : MonoBehaviour
     public float fRightSpeed = 1f;
     public float bRightSpeed = 2f;
     RotateEnemy rotateEnemy;
-    private enemyAnimationStateController _emngrAttack;
+    private EnemyAnimationStateController _emngrAttack;
     private int triggerCount;
     void Start()
     {
         rotateEnemy = GameObject.FindGameObjectWithTag("A").GetComponent<RotateEnemy>();
-        _emngrAttack = GameObject.FindGameObjectWithTag ("A").GetComponent<enemyAnimationStateController>();
+        _emngrAttack = GameObject.FindGameObjectWithTag ("A").GetComponent<EnemyAnimationStateController>();
     }
 
     void Update()

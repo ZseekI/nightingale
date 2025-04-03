@@ -6,13 +6,13 @@ public class DistanceChecker : MonoBehaviour
 {
     public Transform object1; // วัตถุที่ 1
     public Transform object2; // วัตถุที่ 2
-    enemyAnimationStateController _mngrEnemyAnimation;
+    EnemyAnimationStateController _mngrEnemyAnimation;
     private float distance;
     public bool check;
 
     void Start()
     {
-        _mngrEnemyAnimation = GetComponent<enemyAnimationStateController>();
+        _mngrEnemyAnimation = GetComponent<EnemyAnimationStateController>();
     }
     void Update()
     { 

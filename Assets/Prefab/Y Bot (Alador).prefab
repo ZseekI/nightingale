@@ -88,7 +88,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3ba6ab50fe76d0b419c667d6c256436e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7263058
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3ba6ab50fe76d0b419c667d6c256436e, type: 3}
       propertyPath: m_LocalRotation.x
@@ -96,7 +96,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3ba6ab50fe76d0b419c667d6c256436e, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000049830225
+      value: 0.6873718
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3ba6ab50fe76d0b419c667d6c256436e, type: 3}
       propertyPath: m_LocalRotation.z
@@ -511,6 +511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4be1c39ff53421e498b37a256a37038e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackPhase: 0
   attackCombo:
   - damage: 10
     stunValue: 5
@@ -523,25 +524,25 @@ MonoBehaviour:
     energyGain: 5
     energyConsumption: 1
     attackRange: 2
-    knockbackForce: 20
+    knockbackForce: 3
   - damage: 25
     stunValue: 20
     energyGain: 5
     energyConsumption: 2
     attackRange: 2
-    knockbackForce: 12
+    knockbackForce: 1
   - damage: 40
     stunValue: 25
     energyGain: 0
     energyConsumption: 3
     attackRange: 8
-    knockbackForce: 150
+    knockbackForce: 5
   - damage: 40
     stunValue: 25
     energyGain: 0
     energyConsumption: 4
     attackRange: 8
-    knockbackForce: 150
+    knockbackForce: 7
   - damage: 0
     stunValue: 0
     energyGain: 0
@@ -549,6 +550,9 @@ MonoBehaviour:
     attackRange: 0
     knockbackForce: 0
   playerMaxHP: 150
+  playerMaxWalkSpeed: 22.5
+  playerMaxRunSpeed: 40
+  playerAcceleration: 7
   damage: 10
 --- !u!114 &9163742358507427026
 MonoBehaviour:

@@ -1,180 +1,166 @@
 using UnityEngine;
 using System.Collections;
-using Unity.Mathematics;
 
-public class enemyAnimationStateController : MonoBehaviour
+public class EnemyAnimationStateController : MonoBehaviour
 {
-    Animator animator;
-    DistanceChecker distance;
-    public Transform enemyTransform;
-    public float beforeAttackDelay1 = 0f;
-    public float beforeAttackDelay2 = 0f;
-    private float delayTime;
-    public bool isNearHit;
-    public bool isDirect;
-    public float distanceToMoveX;
-    public float distanceToMoveZ;
     private Vector3 debugEnemy;
-    public int attack;
-    private bool prePare;
-    private bool canAttack;
+    private Animator animator;
+    private DistanceChecker distanceChecker;
+
+    [Header("DeBug")]
+    public float delayTime;
+    public bool isNearHit, isDirect, debug;
     public float playerDistance;
-    private float debugTime;
-    public bool debug;
-    
-    
+    public float distanceToMoveX, distanceToMoveZ;
+    public int attack;
+    public bool prePare, canAttack;
+
+    [Header ("Move Real Enemy To End Animation Position")]
+    public Transform enemyTransform;
+
+    [Header("Delay Time")]
+    public float biteDelay = 0f;
+    public float nearAttackDelay = 0f;
+    public float farAttackDelay1 = 0f;
+    public float farAttackDelay2 = 0f;
+    public float afterAttackDelay = 0f;
+
     void Start()
     {
+        // ดึงค่าคอมโพเนนต์ Animator และ DistanceChecker
         animator = GetComponent<Animator>();
-        distance = GetComponent<DistanceChecker>();
-        attack = 0;
+        distanceChecker = GetComponent<DistanceChecker>();
+        attack = 0; // กำหนดค่าเริ่มต้นของการโจมตี
+        canAttack = true;
     }
 
     void Update()
     {
+        // อัปเดตตัวจับเวลา
+        UpdateTimers();
+
+        // ถ้า debug ทำงาน ให้บังคับเรียก AnimationAttackPhase()
+        //if (debug) AnimationAttackPhase();
         
-        if (delayTime > 0)
-        {
-            delayTime -= Time.deltaTime; if (delayTime < 0) delayTime = 0;
-        }
-        if (debugTime > 0)
-        {
-            debugTime -= Time.deltaTime; if (debugTime < 0) debugTime = 0;
-        }
-        if (debug)
-        {
-            AnimationAttackPhase();
-            //debug = false;
-            //Reset();
-        }
+        // ตรวจสอบว่าควรเลือกท่าโจมตีหรือไม่
+        if (attack == 0) DetermineAttack();
 
-        if (attack == 0)
-        {
-            if (playerDistance == 0f)
-            {
-                distance.GetDistance();
-            }
-            // ถ้า delayTime หมดแล้ว และอยู่ในสถานะการโจมตีใกล้
-            if (isNearHit && isDirect && delayTime == 0)
-            {
-                delayTime = beforeAttackDelay1;
-                attack = 1; //Na
-            }
-            if (!isNearHit && isDirect && delayTime == 0 && playerDistance <= 10f)
-            {
-                delayTime = beforeAttackDelay1;
-                attack = 7; //Na
-            }
-            // ถ้า delayTime หมดแล้ว และอยู่ในสถานะการโจมตีไกล
-            if (!isNearHit && isDirect && delayTime == 0 && playerDistance <= 18f && playerDistance > 15f)
-            {
-                delayTime = beforeAttackDelay2;
-                attack = 2; //Fa1
-            }
-            if (!isNearHit && isDirect && delayTime == 0 && playerDistance <= 30f && playerDistance > 18f)
-            {
-                delayTime = beforeAttackDelay2;
-                attack = 3; //Fa2
-            }
-            //เลือกเดิน
-            if (!isNearHit && isDirect && delayTime == 0 && playerDistance <= 13f && playerDistance > 10f)
-            {
-                attack = 4; //Ml
-            }
-            if (!isNearHit && isDirect && delayTime == 0 && playerDistance <= 15f && playerDistance > 13f)
-            {
-                attack = 5; //Lm
-            }
-            if (!isNearHit && isDirect && delayTime == 0 && playerDistance > 30f)
-            {
-                attack = 6; //Rt
-            }
-
-        }
-
-        if (attack > 0 && attack < 8 && delayTime == 0)
-        {
-            AttackChose();
-        }
-
-        //Debug.Log(delayTime);
+        // ถ้าอยู่ในสถานะที่สามารถโจมตีได้ ให้โจมตี
+        if (attack > 0 && attack < 8 && delayTime == 0) ExecuteAttack();
     }
 
-    public void AnimationAttackPhase() // Reset animation to idle when end
+    void UpdateTimers()
+    {
+        // ลดค่า delayTime และ debugTime เมื่อเวลาผ่านไป
+        if (delayTime > 0) delayTime = Mathf.Max(0, delayTime - Time.deltaTime);
+        //if (debugTime > 0) debugTime = Mathf.Max(0, debugTime - Time.deltaTime);
+    }
+
+    void DetermineAttack()
+    {
+        // ตรวจสอบระยะของผู้เล่น
+        if (playerDistance == 0f) distanceChecker.GetDistance();
+        if (delayTime > 0) return; // ถ้ายังมี delayTime อยู่ ไม่ต้องเลือกท่าโจมตีใหม่
+
+        // เงื่อนไขการเลือกท่าโจมตี
+        if (isDirect)
+        {
+            if (isNearHit) { SetAttack(1, nearAttackDelay); Debug.Log("At DetermineAttack Delay: " + delayTime); return; } // ตีใกล้
+            if (playerDistance <= 10f) { SetAttack(7, biteDelay); return; } // กัด
+            if (playerDistance <= 18f) { SetAttack(2, farAttackDelay1); return; } // ตีไกล 1
+            if (playerDistance <= 30f) { SetAttack(3, farAttackDelay2); return; } // ตีไกล 2
+            if (playerDistance > 30f) { SetAttack(6); return; }  // วิ่งไปหา
+            if (playerDistance > 13f) { SetAttack(5); return; } // เดินไกล
+            if (playerDistance > 10f) { SetAttack(4); return; } // เดินใกล้
+        }
+    }
+
+    void SetAttack(int attackType, float delay = 0f)
+    {
+        // ตั้งค่าท่าที่จะใช้และกำหนดเวลา delay ก่อนโจมตี
+        attack = attackType;
+        delayTime = delay;
+    }
+
+    void ExecuteAttack()
+    {
+        prePare = true;
+        if (!canAttack) return; // ถ้ายังโจมตีไม่ได้ ให้รอก่อน
+        
+        canAttack = false;
+        
+        // ใช้ switch-case แทน if-else เพื่อลดความซับซ้อน
+        switch (attack)
+        {
+            case 1: animator.SetBool("isNearHit", true); break;
+            case 2: SetMoveValues("isFarHit", 31.66f, 0f); break;
+            case 3: SetMoveValues("isFarHit2", 41.59f, 13.17f); Debug.Log(attack); break;
+            case 4: SetMoveValues("isMoveLittle", 4.19f, 7.28f); break;
+            case 5: SetMoveValues("isMoveLong", 21.31f, -7.94f); break;
+            case 6: SetMoveValues("isRunTo", 15.09f, 0.32f); break;
+            case 7: SetMoveValues("isBite", -2.72f, 0.66f); break;
+        }
+
+        // ปิดสถานะ "สิ้นสุด" เพื่อให้แอนิเมชันเล่นต่อ
+        animator.SetBool("isEnd", false);
+        canAttack = true;
+    }
+
+    void SetMoveValues(string animationBool, float moveX, float moveZ)
+    {
+        // ตั้งค่าระยะเคลื่อนที่และเปิดใช้งานแอนิเมชัน
+        animator.SetBool(animationBool, true);
+        distanceToMoveX = moveX;
+        distanceToMoveZ = moveZ;
+    }
+
+    public void AnimationAttackPhase()
     {
         Debug.Log("Animation End");
 
-        // ตรวจสอบว่าจบสถานะเดิน
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("MoveLittle"))
-        {
-            animator.SetBool("isMoveLittle", false);
-            animator.SetBool("isEnd", true);
-            SetMoveDirection();
-        }
-
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("MoveLong"))
-        {
-            animator.SetBool("isMoveLong", false);
-            animator.SetBool("isEnd", true);
-            SetMoveDirection();
-        }
-
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("RunTo"))
-        {
-            animator.SetBool("isRunTo", false);
-            animator.SetBool("isEnd", true);
-            SetMoveDirection();
-        }
-
-        // ตรวจสอบว่าจบสถานะการโจมตีใกล้
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("AttackNear2"))
-        {
-            animator.SetBool("isNearHit", false);
-            animator.SetBool("isEnd", true);
-            playerDistance = 0f;
-            attack = 0;
-        }
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Bite"))
-        {
-            animator.SetBool("isBite", false);
-            animator.SetBool("isEnd", true);
-            SetMoveDirection();
-        }
-    
-        // ตรวจสอบว่าจบสถานะการโจมตีไกล
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("FarAttack"))
-        {  
-            animator.SetBool("isFarHit", false);
-            animator.SetBool("isEnd", true);
-            SetMoveDirection();
-        }
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("AttackFar2"))
-        {  
-            animator.SetBool("isFarHit2", false);
-            animator.SetBool("isEnd", true);
-            SetMoveDirection();
-        }
+        // เช็คว่าแอนิเมชันไหนเล่นจบ และรีเซ็ตสถานะ
+        ResetAnimationState("MoveLittle", "isMoveLittle");
+        ResetAnimationState("MoveLong", "isMoveLong");
+        ResetAnimationState("RunTo", "isRunTo");
+        ResetAnimationState("AttackNear2", "isNearHit", true);
+        ResetAnimationState("Bite", "isBite");
+        ResetAnimationState("FarAttack", "isFarHit");
+        ResetAnimationState("AttackFar2", "isFarHit2");
     }
 
-    //////////
+void ResetAnimationState(string animationName, string boolParam, bool resetAttack = false)
+{
+    var stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+    
+    if (!stateInfo.IsName(animationName)) return;
+    
+    // เช็คว่าแอนิเมชันยังไม่จบจริงๆ ก่อนรีเซ็ต
+    if (stateInfo.normalizedTime >= 1.0f) return; 
+
+    animator.SetBool(boolParam, false);
+    animator.SetBool("isEnd", true);
+    delayTime = afterAttackDelay;
+    attack = 0;
+    prePare = false;
+    if (boolParam != "isNearHit")
+    {
+        SetMoveDirection();
+    }
+}
+
     void SetMoveDirection()
     {
+        // คำนวณระยะเคลื่อนที่ของศัตรู
         Vector3 moveDirection = (-enemyTransform.right * distanceToMoveX) + (enemyTransform.forward * distanceToMoveZ);
         debugEnemy = enemyTransform.position + moveDirection;
         enemyTransform.position += moveDirection;
 
-        //Debug.Log("Moved to: " + enemyTransform.position);
-        //Debug.Log("Vector3: " + moveDirection);
-        //Debug.Log("debugEnemy: " + debugEnemy);
         StartCoroutine(MoveToDebugEnemy());
     }
-/// <summary>
-/// ////////////
-/// </summary>
+
     IEnumerator MoveToDebugEnemy()
     {
-        float duration = 0.2f; // ระยะเวลาการย้าย (ปรับได้)
-        float elapsedTime = 0f;
+        float duration = 0.2f, elapsedTime = 0f;
         Vector3 startPosition = enemyTransform.position;
 
         while (elapsedTime < duration)
@@ -184,152 +170,25 @@ public class enemyAnimationStateController : MonoBehaviour
             yield return null;
         }
 
-        // ให้แน่ใจว่าตำแหน่งสุดท้ายตรงกับ debugEnemy
         enemyTransform.position = debugEnemy;
         Debug.Log("Enemy moved to debugEnemy: " + enemyTransform.position);
 
         StartCoroutine(ReEnableRotation());
     }
 
-        public void PreEnd()
+    public void PreEnd()
     {
+        // ปิดการหมุนของศัตรูก่อนย้ายตำแหน่ง
         GetComponent<RotateEnemy>().enabled = false;
         Debug.Log("RotateEnemy False");
     }
 
     IEnumerator ReEnableRotation()
     {
-        yield return new WaitForSeconds(0.05f); // รอให้ตำแหน่งอัปเดตก่อน
+        yield return new WaitForSeconds(0.05f);
         GetComponent<RotateEnemy>().enabled = true;
         playerDistance = 0f;
         attack = 0;
-    }
-
-
-    void AttackChose()
-    {
-        if (attack == 1 )
-        {
-            //Debug.Log("Will Attack Near");
-            prePare = true;
-            if (canAttack)
-            {
-                canAttack = false;
-                attack = 8;
-                animator.SetBool("isNearHit", true);
-                debugTime = 25f;
-                //Debug.Log("Attack Near");
-            }
-        }
-        if (attack == 2)
-        {
-            //Debug.Log("Will Attack Far");
-            prePare = true;
-            if (canAttack)
-            {
-                canAttack = false;
-                attack = 8;
-                animator.SetBool("isFarHit", true);
-                distanceToMoveX = 31.66f;
-                distanceToMoveZ = 0f;
-                debugTime = 25f;
-                //Debug.Log("Attack Far");
-            }
-        }
-        if (attack == 3)
-        {
-            //Debug.Log("Will Attack Far2");
-            prePare = true;
-            if (canAttack)
-            {
-                canAttack = false;
-                attack = 8;
-                animator.SetBool("isFarHit2", true);
-                distanceToMoveX = 41.59263f;
-                distanceToMoveZ = 13.17362f;
-                debugTime = 25f;
-                //Debug.Log("Attack Far2");
-            }
-        }
-        if (attack == 4)
-        {
-            //Debug.Log("Will Attack Far2");
-            prePare = true;
-            if (canAttack)
-            {
-                canAttack = false;
-                attack = 8;
-                animator.SetBool("isMoveLittle", true);
-                distanceToMoveX = 4.199841f;
-                distanceToMoveZ = 7.283287f;
-                debugTime = 25f;
-                //Debug.Log("Attack Far2");
-            }
-        }
-        if (attack == 5)
-        {
-            //Debug.Log("Will Attack Far2");
-            prePare = true;
-            if (canAttack)
-            {
-                canAttack = false;
-                attack = 8;
-                animator.SetBool("isMoveLong", true);
-                distanceToMoveX = 21.31273f;
-                distanceToMoveZ = -7.948272f;
-                debugTime = 25f;
-                //Debug.Log("Attack Far2");
-            }
-        }
-        if (attack == 6)
-        {
-            //Debug.Log("Will Attack Far2");
-            prePare = true;
-            if (canAttack)
-            {
-                canAttack = false;
-                attack = 8;
-                animator.SetBool("isRunTo", true);
-                distanceToMoveX = 15.09278f;
-                distanceToMoveZ = 0.3228941f;
-                debugTime = 25f;
-                //Debug.Log("Attack Far2");
-            }
-        }
-        if (attack == 7)
-        {
-            //Debug.Log("Will Attack Far2");
-            prePare = true;
-            if (canAttack)
-            {
-                canAttack = false;
-                attack = 8;
-                animator.SetBool("isBite", true);
-                distanceToMoveX = -2.72087f;
-                distanceToMoveZ = 0.6649511f;
-                debugTime = 25f;
-                //Debug.Log("Attack Far2");
-            }
-        }
-        if (prePare)
-        {
-            //Debug.Log("isEnd False");
-            animator.SetBool("isEnd", false);
-            canAttack = true;
-            //debug = true;
-        }
-    }
-    void Reset()
-    {
-        playerDistance = 0f;
-        attack = 0;
-        animator.SetBool("isEnd", true);
-        animator.SetBool("isMoveLittle", false);
-        animator.SetBool("isMoveLong", false);
-        animator.SetBool("isRunTo", false);
-        animator.SetBool("isNearHit", false);
-        animator.SetBool("isBite", false);
-        animator.SetBool("isFarHit", false);
-        animator.SetBool("isFarHit2", false);
+        prePare = false;
     }
 }

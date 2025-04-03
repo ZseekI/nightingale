@@ -2,11 +2,18 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private float maxWalkSpeedms;            // ความเร็วเดิน (m/s) หลังจากแปลงจาก km/h
+    private float maxRunSpeedms;             // ความเร็ววิ่ง (m/s) หลังจากแปลงจาก km/h
+    private animationAttackStateController _mngrAttack;
+    // chenge move speed when attack
+    private int attackWalkSpeed = 2;
     // ============================
     // Debug variables: ใช้สำหรับตรวจสอบค่าต่าง ๆ ที่คำนวณออกมา
     // ============================
     [Header("Debug")]
+    public bool isAttack;
     public float dynamicAcceleration;  // แรงเร่งที่คำนวณจากสูตร F = ma (ตรงกับหัวข้อ C)
+    public float accelerationPercent;
     public float baseAcceleration;
     public float targetMaxSpeed;              // ความเร็วสูงสุดที่ใช้งานในตอนนี้ (m/s)
     public float accelerationRatio;           // สัดส่วนความแตกต่างระหว่างความเร็วปัจจุบันกับ maxSpeed (0-1)
@@ -18,17 +25,15 @@ public class PlayerController : MonoBehaviour
     // ============================
     // Movement Settings
     // ============================
-    [Header("Movement")]
+    [Header("Movement (When Drag = 0)")]
+    public float acceleration;
     public float maxSpeedIn = 5f;             // เวลาที่ต้องการให้ตัวละครเร่งจาก 0 ไปยัง maxSpeed (วินาที)
-    public float maxWalkSpeedKMH = 18f;       // ความเร็วเดินที่ต้องการ (km/h) → แปลงเป็น m/s ใน SetMaxSpeed()
-    public float maxRunSpeedKMH = 36f;        // ความเร็ววิ่งที่ต้องการ (km/h)
-    [Header("Max Speed (When Drag = 0)")]
+    public float maxWalkSpeedKMH;                // ความเร็วเดินที่ต้องการ (km/h) → แปลงเป็น m/s ใน SetMaxSpeed()
+    public float maxRunSpeedKMH;                // ความเร็ววิ่งที่ต้องการ (km/h)
+    [Header("Turn Speed")]
     public float walkTurnSpeed = 10f;         // ความเร็วหมุนตอนเดิน (สำหรับ Slerp การเปลี่ยนทิศทาง)
     public float runTurnSpeed = 5f;           // ความเร็วหมุนตอนวิ่ง (ปรับให้ตอบสนองตามความเร็ว)
-    private float maxWalkSpeedms;            // ความเร็วเดิน (m/s) หลังจากแปลงจาก km/h
-    private float maxRunSpeedms;             // ความเร็ววิ่ง (m/s) หลังจากแปลงจาก km/h
     public float turnSpeed;                 // ความเร็วการหมุนจริง (ปรับตามความเร็วปัจจุบัน)
-
     public bool isRunning;                  // กำหนดว่าตอนนี้วิ่งหรือเดิน
 
     // ============================
@@ -64,6 +69,10 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (_mngrAttack == null)
+        {
+            _mngrAttack = GameObject.FindGameObjectWithTag("CombatAnimationManager").GetComponent<animationAttackStateController>();
+        }
         // ตรวจสอบว่าตัวละครอยู่บนพื้นหรือไม่ โดยใช้ SphereCast (การใช้ Raycast/SphereCast เป็นส่วนหนึ่งของ Unity Physics 3D – หัวข้อ A)
         grounded = Physics.SphereCast(transform.position, 0.3f, Vector3.down, out RaycastHit hit, playerHeight * 0.5f + 0.2f, whatIsGround);
 
@@ -72,7 +81,7 @@ public class PlayerController : MonoBehaviour
         SpeedControl();
 
         // กำหนด drag เมื่ออยู่บนพื้น (Drag นี้เป็นส่วนหนึ่งของการประยุกต์แรงเสียดทานใน Unity Physics 3D – หัวข้อ E)
-        rb.drag = grounded ? groundDrag : 0;
+        rb.linearDamping = grounded ? groundDrag : 0;
 
         // คำนวณความเร็วปัจจุบันใน km/h สำหรับ Debug
         currentSpeedKMH = currentSpeed * 3.6f;
@@ -95,15 +104,26 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer()
     {
+        if (_mngrAttack != null)
+        {
+            isAttack = _mngrAttack.isAttack;
+        }
         // ============================
         // คำนวณแรงเร่ง (Dynamic Acceleration) โดยใช้หลัก F = ma (ตรงกับหัวข้อ C)
         // ============================
         // คำนวณความเร็วปัจจุบัน (m/s)
-        currentSpeed = rb.velocity.magnitude;
+        currentSpeed = rb.linearVelocity.magnitude;
 
         // กำหนด targetMaxSpeed จาก maxRunSpeed หรือ maxWalkSpeed (m/s)
-        targetMaxSpeed = isRunning ? maxRunSpeedms : maxWalkSpeedms;
-
+        if (isAttack)
+        {
+            targetMaxSpeed = maxWalkSpeedms / attackWalkSpeed;
+        }
+        else
+        {
+            targetMaxSpeed = isRunning ? maxRunSpeedms : maxWalkSpeedms;
+        }
+    
         // คำนวณ targetAcceleration โดยใช้สูตร: a = Vmax / t 
         // ซึ่งหมายความว่า ถ้าเราต้องการให้ตัวละครไปถึงความเร็วสูงสุด (targetMaxSpeed) ภายในเวลา (maxSpeedIn) วินาที
         targetAcceleration = targetMaxSpeed / maxSpeedIn;  // หน่วย m/s²
@@ -113,10 +133,12 @@ public class PlayerController : MonoBehaviour
         // แต่เมื่อ currentSpeed ใกล้ targetMaxSpeed, accelerationRatio จะลดลง
         accelerationRatio = Mathf.Clamp01((targetMaxSpeed - currentSpeed) / targetMaxSpeed);
 
-        // baseAcceleration ถูกตั้งไว้ที่ 70% ของ targetAcceleration
-        // เหตุผล: ให้มีแรงเร่งขั้นต่ำตลอดเวลา เพื่อให้ตัวละครไม่สูญเสียแรงเร่งเมื่อ currentSpeed ใกล้ถึง targetMaxSpeed
-        // นั่นคือ แม้ accelerationRatio จะต่ำลง (เมื่อ currentSpeed ใกล้ targetMaxSpeed) ตัวละครก็ยังมีแรงเร่งพื้นฐานที่ 70% ของ targetAcceleration
-        baseAcceleration = 0.7f * targetAcceleration;
+        // baseAcceleration ถูกตั้งไว้ที่ X% targetAcceleration
+        // เหตุผล: ให้มีแรงเร่งขั้นต่ำตลอดเวลา เพื่อให้ตัวละครไม่สูญเสียแรงเร่งเมื่อ currentSpeed ใกล้ถึง targetMaxSpeed, ให้วัถถุมีมีแรงเร่งที่เป็นเอกลักษณ์ของแต่ละอัน
+        // นั่นคือ แม้ accelerationRatio จะต่ำลง (เมื่อ currentSpeed ใกล้ targetMaxSpeed) ตัวละครก็ยังมีแรงเร่งพื้นฐานที่ X% ของ targetAcceleration
+        // แล้ะใช้ปรับความเร็วในการออกตัวได้ด้วย
+        accelerationPercent = acceleration / 10;
+        baseAcceleration = accelerationPercent * targetAcceleration;
 
         // dynamicAcceleration จะรวมทั้งแรงพื้นฐาน (baseAcceleration) และส่วนที่เพิ่มขึ้นตาม accelerationRatio
         // เมื่อ currentSpeed ต่ำกว่า targetMaxSpeed dynamicAcceleration จะสูง (เพื่อเร่งได้เร็วขึ้น)
@@ -156,10 +178,10 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(force * airMultiplier, ForceMode.Force);
 
             // ลดความเร็วในแกน X และ Z แบบค่อยๆ (ไม่ลดแกน Y เพื่อให้แรงโน้มถ่วงทำงาน)
-            Vector3 newVelocity = rb.velocity;
+            Vector3 newVelocity = rb.linearVelocity;
             newVelocity.x = Mathf.Lerp(newVelocity.x, 0, Time.deltaTime * 5f);
             newVelocity.z = Mathf.Lerp(newVelocity.z, 0, Time.deltaTime * 5f);
-            rb.velocity = newVelocity;
+            rb.linearVelocity = newVelocity;
         }
     }
 
@@ -179,7 +201,7 @@ public class PlayerController : MonoBehaviour
     // ============================
     private void SpeedControl()
     {
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         float targetSpeed = isRunning ? maxRunSpeedms : maxWalkSpeedms;
 
         // กำหนด slowDownFactor เพื่อให้ตัวละครลดความเร็วได้เร็วขึ้นเมื่อไม่มีอินพุต (Air Resistance / Friction effect)
@@ -195,9 +217,9 @@ public class PlayerController : MonoBehaviour
         if (flatVel.magnitude > targetSpeed)
         {
             Vector3 limitedVel = flatVel.normalized * targetSpeed;
-            rb.velocity = new Vector3(
+            rb.linearVelocity = new Vector3(
                 Mathf.Lerp(flatVel.x, limitedVel.x, Time.deltaTime * slowDownFactor),
-                rb.velocity.y,
+                rb.linearVelocity.y,
                 Mathf.Lerp(flatVel.z, limitedVel.z, Time.deltaTime * slowDownFactor)
             );
         }
