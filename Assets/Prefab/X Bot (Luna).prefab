@@ -431,36 +431,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackPhase: 0
   attackCombo:
-  - damage: 10
+  - damage: 50
     stunValue: 8
     energyGain: 5
     energyConsumption: 0
     attackRange: 2
-    knockbackForce: 5
-  - damage: 25
+    knockbackForce: 1
+  - damage: 30
     stunValue: 15
     energyGain: 14
     energyConsumption: 0
     attackRange: 2
-    knockbackForce: 15
-  - damage: 27
+    knockbackForce: 2
+  - damage: 45
     stunValue: 16
     energyGain: 6
     energyConsumption: 0
     attackRange: 0
-    knockbackForce: 12
-  - damage: 30
+    knockbackForce: 2
+  - damage: 55
     stunValue: 13
     energyGain: 7
     energyConsumption: 0
     attackRange: 2
-    knockbackForce: 25
-  - damage: 60
+    knockbackForce: 1
+  - damage: 80
     stunValue: 40
     energyGain: 0
     energyConsumption: 20
     attackRange: 4
-    knockbackForce: 50
+    knockbackForce: 4
   playerMaxHP: 200
   playerMaxWalkSpeed: 24
   playerMaxRunSpeed: 60
