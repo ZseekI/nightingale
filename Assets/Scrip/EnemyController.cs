@@ -1,4 +1,6 @@
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour {
     public int maxHP = 50;
@@ -36,7 +38,12 @@ public class EnemyController : MonoBehaviour {
     
     void Die() {
         // ทำลายศัตรูและเรียกใช้งานเอฟเฟคที่ต้องการ
-        Destroy(gameObject);
+        GameObject objToDestroy = GameObject.FindGameObjectWithTag("A");
+        if (objToDestroy != null)
+        {
+            Destroy(objToDestroy);
+            SceneManager.LoadScene(2);
+        }
     }
 
     void UpdateUI() 

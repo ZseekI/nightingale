@@ -1,4 +1,6 @@
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CombatSystem : MonoBehaviour
 {
@@ -168,6 +170,7 @@ public void ExecuteAttack()
     private void PlayerDeath()
     {
         Debug.Log(gameObject.name + " has died!");
+        SceneManager.LoadScene(2);
     }
 
     public int GetCurrentHP()

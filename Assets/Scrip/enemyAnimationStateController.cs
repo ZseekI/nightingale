@@ -154,7 +154,7 @@ public class EnemyAnimationStateController : MonoBehaviour
 
         if (!stateInfo.IsName(animationName)) return;
 
-        if (stateInfo.normalizedTime >= 1.0f) return;
+        //if (stateInfo.normalizedTime >= 1.0f) return;
 
         animator.SetBool(boolParam, false);
         animator.SetBool("isEnd", true);
